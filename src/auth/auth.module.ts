@@ -1,16 +1,28 @@
 import { Module } from '@nestjs/common';
-//import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersModule } from '../module/users/users.module';
 import { GoogleOauthStrategy } from './google.strategy';
-//import { JwtStrategy } from './jwt.strategy'
-//import { ACCESS_TOKEN_SECRET } from '../environments'
+import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constants';
+import { JwtStrategy } from './jwt.strategy';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersRepository } from './users.repository';
 
 @Module({
-  imports: [UsersModule, PassportModule],
-  providers: [AuthService, GoogleOauthStrategy],
+  imports: [
+    // UsersModule,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: {},
+    }),
+    TypeOrmModule.forFeature([UsersRepository]),
+  ],
   controllers: [AuthController],
+  providers: [AuthService, GoogleOauthStrategy, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
