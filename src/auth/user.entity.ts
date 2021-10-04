@@ -23,8 +23,8 @@ export class UserEntity implements IUser {
   email: string;
 
   @ApiProperty({ description: '비밀번호' })
-  @Column({ nullable: true })
-  password: string | null;
+  @Column({ nullable: true, type: 'text' })
+  password: string;
 
   @ApiProperty({ description: '소셜 로그인 서비스 제공자' })
   @Column({ type: 'enum', enum: Provider })
