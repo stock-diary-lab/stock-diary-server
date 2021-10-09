@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Post,
+  Redirect,
   Req,
   UseGuards,
   ValidationPipe,
@@ -16,39 +17,36 @@ import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Get('google')
-  @UseGuards(AuthGuard('google'))
-  async googleAuth(@Req() req) {}
-
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req) {
-    return this.authService.googleLogin(req);
-  }
+  @Redirect(`http://localhost:8080`, 302)
+  async googleAuthRedirect(@Req() req) {
+    const { user } = await this.authService.googleLogin(req);
 
-  @ApiResponse({
-    status: 201,
-  })
-  @Post('auth/signup/kakao')
-  singUp(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.authService.signUp(createUserDto);
+    const { accessToken } = await this.authService.createUserIfExist(user);
+
+    return {
+      url: `http://localhost:8080?token=${accessToken}`,
+    };
   }
 
   @ApiResponse({
     status: 200,
   })
-  @Post('auth/signin/kakao')
-  singIn(@Body(ValidationPipe) createUserDto: CreateUserDto) {
-    return this.authService.signIn(createUserDto);
+  @Post('login/kakao')
+  async singUp(@Body(ValidationPipe) createUserDto: CreateUserDto) {
+    return await this.authService.createUserIfExist(createUserDto);
   }
 
-  // token으로 가입 인증
+  // token으로 유저 정보 리턴
   @ApiResponse({
     status: 200,
   })
-  @Post('auth/test')
+  @Get('user/me')
   @UseGuards(AuthGuard())
-  test(@Req() req) {
-    console.log('req', req);
+  getUser(@Req() req) {
+    return {
+      userName: req.user.nickname,
+    };
   }
 }

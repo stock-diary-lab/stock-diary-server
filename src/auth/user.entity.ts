@@ -12,19 +12,15 @@ import { IUser, Provider } from './user.interface';
 export class UserEntity implements IUser {
   @ApiProperty({ description: '유저 고유 번호' })
   @PrimaryGeneratedColumn('increment')
-  id: number;
+  id: string;
 
-  @ApiProperty({ description: '이름' })
+  @ApiProperty({ description: '소셜서비스 제공 고유 번호' })
   @Column()
-  name: string;
+  providerId: string;
 
-  @ApiProperty({ description: '이메일' })
+  @ApiProperty({ description: '닉네임' })
   @Column()
-  email: string;
-
-  @ApiProperty({ description: '비밀번호' })
-  @Column({ nullable: true, type: 'text' })
-  password: string;
+  nickname: string;
 
   @ApiProperty({ description: '소셜 로그인 서비스 제공자' })
   @Column({ type: 'enum', enum: Provider })
@@ -40,10 +36,9 @@ export class UserEntity implements IUser {
 
   constructor(partial: Partial<UserEntity>) {
     if (partial) {
-      this.name = partial.name;
-      this.email = partial.email;
+      this.providerId = partial.providerId;
+      this.nickname = partial.nickname;
       this.provider = partial.provider;
-      this.password = partial.password || null;
     }
   }
 }

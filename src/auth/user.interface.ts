@@ -5,8 +5,7 @@ export enum Provider {
 }
 
 export interface IUser {
-  name: string;
-  email: string;
-  password: string | null;
+  providerId: string;
+  nickname: string;
   provider: Provider;
 }
