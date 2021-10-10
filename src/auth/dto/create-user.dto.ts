@@ -3,13 +3,13 @@ import { IsNotEmpty } from 'class-validator';
 import { Provider } from '../user.interface';
 
 export class CreateUserDto {
+  @ApiProperty({ description: '소셜서비스 제공 고유 번호' })
+  @IsNotEmpty()
+  readonly providerId: string;
+
   @ApiProperty({ description: '유저 이름' })
   @IsNotEmpty()
-  readonly name: string;
-
-  @ApiProperty({ description: '유저 이메일' })
-  @IsNotEmpty()
-  readonly email: string;
+  readonly nickname: string;
 
   @ApiProperty({
     enum: ['google', 'apple', 'kakao'],

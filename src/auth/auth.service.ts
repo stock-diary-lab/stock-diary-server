@@ -12,43 +12,34 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async googleLogin(req) {
+  async googleLogin(req): Promise<{ user: CreateUserDto }> {
     if (!req.user) {
-      return 'No user from google';
+      throw new UnauthorizedException('google login failed');
     }
 
-    const payload = { name: req.user.name, email: req.user.email };
-
-    const accessToken = await this.jwtService.sign(payload);
-
     return {
-      message: 'User information from google',
       user: req.user,
-      token: accessToken,
     };
   }
 
-  async signUp(createUserDto: CreateUserDto): Promise<{ accessToken: string }> {
-    this.usersRepository.createByProvider(createUserDto);
-    const { name, email } = createUserDto;
-    const payload = { name, email };
+  async createUserIfExist(
+    createUserDto: CreateUserDto,
+  ): Promise<{ accessToken: string; userName: string }> {
+    const { nickname, providerId, provider } = createUserDto;
+
+    const user = await this.usersRepository.findOne({
+      nickname,
+      providerId,
+      provider,
+    });
+
+    if (!user) {
+      await this.usersRepository.createByProvider(createUserDto);
+    }
+
+    const payload = { nickname, providerId };
     const accessToken = await this.jwtService.sign(payload);
 
-    return { accessToken };
-  }
-
-  async signIn(createUserDto: CreateUserDto): Promise<{ accessToken: string }> {
-    const { name, email } = createUserDto;
-
-    const user = await this.usersRepository.findOne({ email });
-
-    if (user) {
-      const payload = { name, email };
-      const accessToken = await this.jwtService.sign(payload);
-
-      return { accessToken };
-    } else {
-      throw new UnauthorizedException('login failed');
-    }
+    return { accessToken, userName: nickname };
   }
 }
