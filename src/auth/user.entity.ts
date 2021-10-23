@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IUser, Provider } from './user.interface';
+import { StockEntity } from 'src/stock/stock.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity implements IUser {
@@ -33,6 +35,9 @@ export class UserEntity implements IUser {
   @ApiProperty({ description: '수정시각' })
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
+
+  @OneToMany((type) => StockEntity, (StockEntity) => StockEntity.user)
+  stocks: StockEntity[];
 
   constructor(partial: Partial<UserEntity>) {
     if (partial) {
