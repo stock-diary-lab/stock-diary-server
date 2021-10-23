@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 
 @Controller()
@@ -41,7 +41,9 @@ export class AuthController {
   // token으로 유저 정보 리턴
   @ApiResponse({
     status: 200,
+    description: '유저 정보 리턴 api',
   })
+  @ApiBearerAuth('jwt')
   @Get('user/me')
   @UseGuards(AuthGuard())
   getUser(@Req() req) {
