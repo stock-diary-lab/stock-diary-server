@@ -8,14 +8,18 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from './stock.interface';
+import { IStock, Type } from './stock.interface';
 import { UserEntity } from '../auth/user.entity';
 
 @Entity({ name: 'stocks' })
-export class StockEntity {
+export class StockEntity implements IStock {
   @ApiProperty({ description: '스톡 고유 번호' })
   @PrimaryGeneratedColumn('increment')
   id: string;
+
+  @ApiProperty({ description: '주식 종목명' })
+  @Column()
+  name: string;
 
   @ApiProperty({ description: '주식 가격' })
   @Column()
@@ -52,4 +56,16 @@ export class StockEntity {
   @ManyToOne((type) => UserEntity, (UserEntity) => UserEntity.stocks)
   @JoinColumn({ name: 'ref_userId' })
   user: UserEntity;
+
+  constructor(partial: Partial<StockEntity>) {
+    if (partial) {
+      this.name = partial.name;
+      this.price = partial.price;
+      this.closingPrice = partial.closingPrice;
+      this.type = partial.type;
+      this.reason = partial.reason;
+      this.isFavorite = partial.isFavorite;
+      this.quantity = partial.quantity;
+    }
+  }
 }
