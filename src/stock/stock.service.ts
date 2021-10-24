@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
@@ -10,7 +9,6 @@ export class StockService {
   constructor(
     @InjectRepository(StockRepository)
     private StockRepository: StockRepository,
-    private readonly jwtService: JwtService,
   ) {}
   /*
   create(createStockDto: CreateStockDto) {
