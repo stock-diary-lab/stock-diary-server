@@ -6,15 +6,10 @@ import { jwtConstants } from '../auth/constants';
 import { JwtStrategy } from '../auth/jwt.strategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { StockRepository } from './stocks.repository';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: {},
-    }),
-    TypeOrmModule.forFeature([StockRepository]),
-  ],
+  imports: [TypeOrmModule.forFeature([StockRepository]), AuthModule],
   controllers: [StockController],
   providers: [StockService],
   //exports: [JwtStrategy],
