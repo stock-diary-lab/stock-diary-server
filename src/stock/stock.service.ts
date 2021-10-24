@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
-import { StockEntity } from './stock.entity';
 import { StockRepository } from './stocks.repository';
 
 @Injectable()
@@ -21,7 +20,7 @@ export class StockService {
 
   async createStockIfExist(
     createStockDto: CreateStockDto,
-  ): Promise<{ accessToken: string; stockName: string }> {
+  ): Promise<{ stock: any }> {
     const { name, price, closingPrice, type, reason, isFavorite, quantity } =
       createStockDto;
 
@@ -39,10 +38,7 @@ export class StockService {
       await this.StockRepository.createByProvider(createStockDto);
     }
 
-    const payload = { name, price };
-    const accessToken = await this.jwtService.sign(payload);
-
-    return { accessToken, stockName: name };
+    return { stock };
   }
 
   findAll() {
