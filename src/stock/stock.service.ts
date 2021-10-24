@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { getConnection } from 'typeorm';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
+import { StockEntity } from './stock.entity';
 import { StockRepository } from './stocks.repository';
 
 @Injectable()
@@ -42,18 +44,19 @@ export class StockService {
   }
 
   findAll() {
-    return `This action returns all stock`;
+    return this.StockRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} stock`;
+    return this.StockRepository.find({ where: { id } });
   }
 
   update(id: number, updateStockDto: UpdateStockDto) {
     return `This action updates a #${id} stock`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} stock`;
+  deleteOne(id: string) {
+    this.StockRepository.delete({ id });
+    return 'delete success';
   }
 }

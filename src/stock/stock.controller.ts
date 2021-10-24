@@ -6,12 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { StockService } from './stock.service';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
 
@@ -29,7 +30,9 @@ export class StockController {
 
   @ApiResponse({
     status: 200,
+    description: '스톡 정보 리턴 api',
   })
+  @ApiBearerAuth('jwt')
   @Get()
   @UseGuards(AuthGuard('jwt'))
   findAll() {
@@ -39,21 +42,28 @@ export class StockController {
   @ApiResponse({
     status: 200,
   })
+  @ApiBearerAuth('jwt')
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.stockService.findOne(+id);
   }
 
+  @ApiResponse({
+    status: 200,
+  })
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
   update(@Param('id') id: string, @Body() updateStockDto: UpdateStockDto) {
     return this.stockService.update(+id, updateStockDto);
   }
 
+  @ApiResponse({
+    status: 200,
+  })
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   remove(@Param('id') id: string) {
-    return this.stockService.remove(+id);
+    return this.stockService.deleteOne(+id);
   }
 }
