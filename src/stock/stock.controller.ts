@@ -15,7 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+
 @Controller('stock')
 @UseGuards(AuthGuard())
 @ApiBearerAuth('jwt')
@@ -45,13 +45,8 @@ export class StockController {
   })
   @ApiBearerAuth('jwt')
   @Get(':id')
-<<<<<<< HEAD
-  @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id') id: number) {
-=======
   findOne(@Param('id') id: string) {
->>>>>>> dd1ec90eae53c6c8657f870f6fd2d02be65db466
-    return this.stockService.findOne(+id);
+    return this.stockService.findOne(id);
   }
 
   @ApiResponse({
@@ -59,7 +54,7 @@ export class StockController {
   })
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStockDto: UpdateStockDto) {
-    return this.stockService.update(+id, updateStockDto);
+    return this.stockService.update(id, updateStockDto);
   }
 
   @ApiResponse({
@@ -67,6 +62,6 @@ export class StockController {
   })
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.stockService.deleteOne(+id);
+    return this.stockService.deleteOne(id);
   }
 }

@@ -45,12 +45,12 @@ export class StockService {
     return this.StockRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.StockRepository.find({ where: { id } });
   }
 
-  update(id: number, updateStockDto: UpdateStockDto) {
-    return `This action updates a #${id} stock`;
+  update(id: string, updateStockDto: UpdateStockDto) {
+    this.StockRepository.update(id, updateStockDto);
   }
 
   deleteOne(id: string) {
