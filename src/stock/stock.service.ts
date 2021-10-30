@@ -12,11 +12,6 @@ export class StockService {
     @InjectRepository(StockRepository)
     private StockRepository: StockRepository,
   ) {}
-  /*
-  create(createStockDto: CreateStockDto) {
-    return 'This action adds a new stock';
-  }
-*/
 
   async createStockIfExist(
     createStockDto: CreateStockDto,
