@@ -5,7 +5,6 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IStock, Type } from './stock.interface';
@@ -50,11 +49,10 @@ export class StockEntity implements IStock {
   createdAt: Date;
 
   @ApiProperty({ description: '수정시각' })
-  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne((type) => UserEntity, (UserEntity) => UserEntity.stocks)
-  @JoinColumn({ name: 'ref_userId' })
+  @ManyToOne(() => UserEntity, (user) => user.stocks)
   user: UserEntity;
 
   constructor(partial: Partial<StockEntity>) {

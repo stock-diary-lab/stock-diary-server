@@ -25,6 +25,10 @@ export class CreateStockDto {
   @IsNotEmpty()
   reason: string;
 
+  @ApiProperty({ description: '매매 날짜' })
+  @IsNotEmpty()
+  readonly date: Date;
+
   @ApiProperty({ description: '선호 여부' })
   @IsNotEmpty()
   readonly isFavorite: number;
@@ -32,4 +36,8 @@ export class CreateStockDto {
   @ApiProperty({ description: '주식 수량' })
   @IsNotEmpty()
   readonly quantity: number;
+
+  @ApiProperty({ description: '유저 아이디' })
+  @IsNotEmpty()
+  readonly userId: number;
 }

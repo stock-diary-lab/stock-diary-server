@@ -8,12 +8,14 @@ import {
   Delete,
   UseGuards,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { StockService } from './stock.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
+import { ReadStockDto } from './dto/read-stock-dto';
 
 @Controller('stock')
 @UseGuards(AuthGuard())
@@ -25,8 +27,11 @@ export class StockController {
     status: 200,
   })
   @Post()
-  async create(@Body(ValidationPipe) createStockDto: CreateStockDto) {
-    return await this.stockService.createStockIfExist(createStockDto);
+  async create(
+    @Req() req,
+    @Body(ValidationPipe) createStockDto: CreateStockDto,
+  ) {
+    return await this.stockService.createStock(createStockDto, req.user);
   }
 
   @ApiResponse({
@@ -35,8 +40,8 @@ export class StockController {
   })
   @ApiBearerAuth('jwt')
   @Get()
-  findAll() {
-    return this.stockService.findAll();
+  findAll(@Req() req, @Query() query: ReadStockDto) {
+    return this.stockService.findAll(query.date, req.user);
   }
 
   @ApiResponse({

@@ -36,7 +36,7 @@ export class UserEntity implements IUser {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @OneToMany((type) => StockEntity, (StockEntity) => StockEntity.user)
+  @OneToMany(() => StockEntity, (stock) => stock.user)
   stocks: StockEntity[];
 
   constructor(partial: Partial<UserEntity>) {
