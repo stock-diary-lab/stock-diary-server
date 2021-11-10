@@ -7,37 +7,24 @@ export class CreateStockDto {
   @IsNotEmpty()
   readonly name: string;
 
-  @ApiProperty({ description: '주식 가격' })
-  @IsNotEmpty()
-  readonly price: string;
-
-  @ApiProperty({ description: '주식 종가' })
-  @IsNotEmpty()
-  readonly closingPrice: number;
-
   @ApiProperty({
     enum: ['buy', 'sell'],
     description: '매매 유형',
   })
   readonly type: Type;
 
-  @ApiProperty({ description: '이유' })
+  @ApiProperty({ description: '주식 가격' })
   @IsNotEmpty()
-  reason: string;
+  readonly price: string;
 
-  @ApiProperty({ description: '매매 날짜' })
-  @IsNotEmpty()
-  readonly date: Date;
-
-  @ApiProperty({ description: '선호 여부' })
-  @IsNotEmpty()
-  readonly isFavorite: number;
+  @ApiProperty({ description: '수수료' })
+  readonly fee: number;
 
   @ApiProperty({ description: '주식 수량' })
   @IsNotEmpty()
   readonly quantity: number;
 
-  @ApiProperty({ description: '유저 아이디' })
+  @ApiProperty({ description: '이유' })
   @IsNotEmpty()
-  readonly userId: number;
+  reason: string;
 }

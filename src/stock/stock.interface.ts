@@ -5,10 +5,9 @@ export enum Type {
 
 export interface IStock {
   name: string;
-  price: string;
-  closingPrice: number;
   type: Type;
-  reason: string;
-  isFavorite: number;
+  price: string;
+  fee: number;
   quantity: number;
+  reason: string;
 }
