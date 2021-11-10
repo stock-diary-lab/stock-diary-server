@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { endOfDay, previousDay, startOfDay } from 'date-fns';
 import { UserEntity } from 'src/auth/user.entity';
 import { Between } from 'typeorm';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
 import { StockEntity } from './stock.entity';
-// import { StockEntity } from './stock.entity';
 import { StockRepository } from './stocks.repository';
 
 @Injectable()
@@ -17,17 +15,15 @@ export class StockService {
   ) {}
 
   async createStock(createStockDto: CreateStockDto, user: UserEntity) {
-    const { name, price, closingPrice, type, reason, isFavorite, quantity } =
-      createStockDto;
+    const { name, type, price, fee, quantity, reason } = createStockDto;
 
     const newStock = new StockEntity({
       name,
-      price,
-      closingPrice,
       type,
-      reason,
-      isFavorite,
+      price,
+      fee,
       quantity,
+      reason,
     });
 
     newStock.user = user;
@@ -56,12 +52,11 @@ export class StockService {
     return this.stockRepository.find({ where: { id } });
   }
 
-  update(id: string, updateStockDto: UpdateStockDto) {
+  update(id: number, updateStockDto: UpdateStockDto) {
     this.stockRepository.update(id, updateStockDto);
   }
 
-  deleteOne(id: string) {
+  deleteOne(id: number) {
     this.stockRepository.delete({ id });
-    return 'delete success';
   }
 }
