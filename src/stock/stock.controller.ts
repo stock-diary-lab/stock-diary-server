@@ -41,8 +41,8 @@ export class StockController {
   })
   @ApiBearerAuth('jwt')
   @Get()
-  findAll(@Req() req, @Query() query: ReadStockDto) {
-    return this.stockService.findAll(query.date, req.user);
+  async findAll(@Req() req, @Query() query: ReadStockDto) {
+    return await this.stockService.findAll(query.date, req.user);
   }
 
   @ApiResponse({
@@ -58,15 +58,20 @@ export class StockController {
     status: 200,
   })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStockDto: UpdateStockDto) {
-    return this.stockService.update(id, updateStockDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateStockDto: UpdateStockDto,
+  ) {
+    await this.stockService.update(id, updateStockDto);
+    return 'update success';
   }
 
   @ApiResponse({
     status: 200,
   })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.stockService.deleteOne(id);
+  async remove(@Param('id') id: number) {
+    await this.stockService.deleteOne(id);
+    return 'delete success';
   }
 }
