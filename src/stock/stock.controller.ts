@@ -41,7 +41,11 @@ export class StockController {
   @ApiBearerAuth('jwt')
   @Get()
   async findAll(@Req() req, @Query() query: ReadStockDto) {
-    return await this.stockService.findAll(query.date, req.user);
+    return await this.stockService.findAll(
+      query.startDate,
+      query.endDate,
+      req.user,
+    );
   }
 
   @ApiResponse({
