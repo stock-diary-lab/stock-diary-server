@@ -3,8 +3,14 @@ import { IsNotEmpty } from 'class-validator';
 
 export class ReadStockDto {
   @ApiProperty({
-    description: '조회하고자 하는 주식내역의 날짜',
+    description: '조회하고자 하는 주식내역의 시작날짜',
   })
   @IsNotEmpty()
-  readonly date: Date;
+  readonly startDate: Date;
+
+  @ApiProperty({
+    description: '조회하고자 하는 주식내역의 마지막날짜',
+  })
+  @IsNotEmpty()
+  readonly endDate: Date;
 }
