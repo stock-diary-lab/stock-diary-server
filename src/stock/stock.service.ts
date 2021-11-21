@@ -48,7 +48,10 @@ export class StockService {
     });
 
     return stocks.reduce((acc, cur) => {
-      const localeDate = cur.createdAt.toLocaleDateString();
+      const date = new Date(cur.createdAt);
+      date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+      const localeDate = date.toLocaleDateString();
 
       if (acc[localeDate]) {
         acc[localeDate].push(cur);
