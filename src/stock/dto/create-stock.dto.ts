@@ -15,7 +15,7 @@ export class CreateStockDto {
 
   @ApiProperty({ description: '주식 가격' })
   @IsNotEmpty()
-  readonly price: string;
+  readonly price: number;
 
   @ApiProperty({ description: '수수료' })
   readonly fee: number;
@@ -27,4 +27,8 @@ export class CreateStockDto {
   @ApiProperty({ description: '이유' })
   @IsNotEmpty()
   reason: string;
+
+  @ApiProperty({ description: '날짜' })
+  @IsNotEmpty()
+  date: Date;
 }

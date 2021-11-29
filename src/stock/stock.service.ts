@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/auth/user.entity';
-import { Between, CircularRelationsError } from 'typeorm';
+import { Between } from 'typeorm';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
 import { StockEntity } from './stock.entity';
@@ -15,7 +15,7 @@ export class StockService {
   ) {}
 
   async createStock(createStockDto: CreateStockDto, user: UserEntity) {
-    const { name, type, price, fee, quantity, reason } = createStockDto;
+    const { name, type, price, fee, quantity, reason, date } = createStockDto;
 
     const newStock = new StockEntity({
       name,
@@ -24,6 +24,7 @@ export class StockService {
       fee,
       quantity,
       reason,
+      date,
     });
 
     newStock.user = user;
@@ -39,7 +40,7 @@ export class StockService {
 
     const stocks = await this.stockRepository.find({
       where: {
-        createdAt: Between(
+        date: Between(
           new Date(startDate).toISOString(),
           new Date(newEndDate).toISOString(),
         ),
@@ -48,7 +49,7 @@ export class StockService {
     });
 
     return stocks.reduce((acc, cur) => {
-      const date = new Date(cur.createdAt);
+      const date = new Date(cur.date);
       date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
       const localeDate = date.toLocaleDateString();

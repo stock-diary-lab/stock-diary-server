@@ -6,8 +6,9 @@ export enum Type {
 export interface IStock {
   name: string;
   type: Type;
-  price: string;
+  price: number;
   fee: number;
   quantity: number;
   reason: string;
+  date: Date;
 }

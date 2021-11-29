@@ -26,7 +26,7 @@ export class StockEntity implements IStock {
 
   @ApiProperty({ description: '주식 가격' })
   @Column()
-  price: string;
+  price: number;
 
   @ApiProperty({ description: '주식 수량' })
   @Column()
@@ -39,6 +39,10 @@ export class StockEntity implements IStock {
   @ApiProperty({ description: '이유' })
   @Column()
   reason: string;
+
+  @ApiProperty({ description: '날짜' })
+  @Column()
+  date: Date;
 
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })
@@ -59,6 +63,7 @@ export class StockEntity implements IStock {
       this.fee = partial.fee;
       this.quantity = partial.quantity;
       this.reason = partial.reason;
+      this.date = partial.date;
     }
   }
 }
