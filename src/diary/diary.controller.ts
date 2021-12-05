@@ -8,12 +8,15 @@ import {
   Delete,
   UseGuards,
   ValidationPipe,
+  Req,
+  Query,
 } from '@nestjs/common';
 import { DiaryService } from './diary.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
+import { ReadDiaryDto } from './dto/read-diary-dto';
 
 @Controller('diary')
 @UseGuards(AuthGuard())
@@ -25,8 +28,11 @@ export class DiaryController {
     status: 200,
   })
   @Post()
-  async create(@Body(ValidationPipe) createDiaryDto: CreateDiaryDto) {
-    return await this.diaryService.createDiaryIfExist(createDiaryDto);
+  async create(
+    @Req() req,
+    @Body(ValidationPipe) createDiaryDto: CreateDiaryDto,
+  ) {
+    return await this.diaryService.createDiary(createDiaryDto, req.user);
   }
 
   @ApiResponse({
@@ -35,8 +41,8 @@ export class DiaryController {
   })
   @ApiBearerAuth('jwt')
   @Get()
-  findAll() {
-    return this.diaryService.findAll();
+  findAll(@Req() req, @Query() query: ReadDiaryDto) {
+    return this.diaryService.findAll(query.startDate, query.endDate, req.user);
   }
 
   @ApiResponse({
@@ -44,7 +50,7 @@ export class DiaryController {
   })
   @ApiBearerAuth('jwt')
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.diaryService.findOne(id);
   }
 
@@ -52,7 +58,7 @@ export class DiaryController {
     status: 200,
   })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiaryDto: UpdateDiaryDto) {
+  update(@Param('id') id: number, @Body() updateDiaryDto: UpdateDiaryDto) {
     return this.diaryService.update(id, updateDiaryDto);
   }
 
@@ -60,7 +66,7 @@ export class DiaryController {
     status: 200,
   })
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.diaryService.deleteOne(id);
   }
 }

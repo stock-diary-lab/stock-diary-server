@@ -9,6 +9,5 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [TypeOrmModule.forFeature([StockRepository]), AuthModule],
   controllers: [StockController],
   providers: [StockService],
-  //exports: [JwtStrategy],
 })
 export class StockModule {}

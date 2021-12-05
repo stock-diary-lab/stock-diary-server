@@ -14,35 +14,35 @@ import { UserEntity } from '../auth/user.entity';
 export class StockEntity implements IStock {
   @ApiProperty({ description: '스톡 고유 번호' })
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
   @ApiProperty({ description: '주식 종목명' })
   @Column()
   name: string;
 
-  @ApiProperty({ description: '주식 가격' })
-  @Column()
-  price: string;
-
-  @ApiProperty({ description: '주식 종가' })
-  @Column()
-  closingPrice: number;
-
   @ApiProperty({ description: '매매 유형' })
   @Column({ type: 'enum', enum: Type })
   type: Type;
+
+  @ApiProperty({ description: '주식 가격' })
+  @Column()
+  price: number;
+
+  @ApiProperty({ description: '주식 수량' })
+  @Column()
+  quantity: number;
+
+  @ApiProperty({ description: '수수료' })
+  @Column({ nullable: true })
+  fee: number;
 
   @ApiProperty({ description: '이유' })
   @Column()
   reason: string;
 
-  @ApiProperty({ description: '선호 여부' })
+  @ApiProperty({ description: '날짜' })
   @Column()
-  isFavorite: number;
-
-  @ApiProperty({ description: '주식 수량' })
-  @Column()
-  quantity: number;
+  date: Date;
 
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })
@@ -58,12 +58,12 @@ export class StockEntity implements IStock {
   constructor(partial: Partial<StockEntity>) {
     if (partial) {
       this.name = partial.name;
-      this.price = partial.price;
-      this.closingPrice = partial.closingPrice;
       this.type = partial.type;
-      this.reason = partial.reason;
-      this.isFavorite = partial.isFavorite;
+      this.price = partial.price;
+      this.fee = partial.fee;
       this.quantity = partial.quantity;
+      this.reason = partial.reason;
+      this.date = partial.date;
     }
   }
 }

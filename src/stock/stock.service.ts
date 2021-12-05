@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { endOfDay, previousDay, startOfDay } from 'date-fns';
 import { UserEntity } from 'src/auth/user.entity';
-import { Between } from 'typeorm';
+import { Between, CircularRelationsError } from 'typeorm';
 import { CreateStockDto } from './dto/create-stock.dto';
 import { UpdateStockDto } from './dto/update-stock.dto';
 import { StockEntity } from './stock.entity';
-// import { StockEntity } from './stock.entity';
 import { StockRepository } from './stocks.repository';
 
 @Injectable()
@@ -17,17 +15,21 @@ export class StockService {
   ) {}
 
   async createStock(createStockDto: CreateStockDto, user: UserEntity) {
-    const { name, price, closingPrice, type, reason, isFavorite, quantity } =
-      createStockDto;
+    const { name, type, price, fee, quantity, reason, date } = createStockDto;
+    const newDate = new Date(date);
+
+    newDate.setTime(
+      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
+    );
 
     const newStock = new StockEntity({
       name,
-      price,
-      closingPrice,
       type,
-      reason,
-      isFavorite,
+      price,
+      fee,
       quantity,
+      reason,
+      date: newDate,
     });
 
     newStock.user = user;
@@ -37,31 +39,47 @@ export class StockService {
     return { message: 'create success' };
   }
 
-  findAll(date: Date, user: UserEntity) {
-    const nextDate = new Date(date);
-    nextDate.setDate(new Date(date).getDate() + 1);
+  async findAll(startDate: Date, endDate: Date, user: UserEntity) {
+    const newEndDate = new Date(endDate);
+    newEndDate.setDate(new Date(endDate).getDate() + 1);
 
-    return this.stockRepository.find({
+    const stocks = await this.stockRepository.find({
       where: {
-        createdAt: Between(
-          new Date(date).toISOString(),
-          nextDate.toISOString(),
+        date: Between(
+          new Date(startDate).toISOString(),
+          new Date(newEndDate).toISOString(),
         ),
         user,
       },
     });
+
+    return stocks.reduce((acc, cur) => {
+      const date = new Date(cur.date);
+      date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+      const localeDate = date.toLocaleDateString();
+
+      if (acc[localeDate]) {
+        acc[localeDate].push(cur);
+      } else {
+        acc[localeDate] = [cur];
+      }
+
+      return acc;
+    }, {});
   }
 
   findOne(id: string) {
     return this.stockRepository.find({ where: { id } });
   }
 
-  update(id: string, updateStockDto: UpdateStockDto) {
-    this.stockRepository.update(id, updateStockDto);
+  update(id: number, updateStockDto: UpdateStockDto) {
+    const { date, ...others } = updateStockDto;
+
+    this.stockRepository.update(id, { ...others });
   }
 
-  deleteOne(id: string) {
+  deleteOne(id: number) {
     this.stockRepository.delete({ id });
-    return 'delete success';
   }
 }
