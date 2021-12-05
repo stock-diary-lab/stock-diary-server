@@ -66,7 +66,7 @@ export class StockController {
     @Body() updateStockDto: UpdateStockDto,
   ) {
     await this.stockService.update(id, updateStockDto);
-    return 'update success';
+    return { message: 'update success' };
   }
 
   @ApiResponse({

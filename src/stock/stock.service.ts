@@ -16,7 +16,13 @@ export class StockService {
 
   async createStock(createStockDto: CreateStockDto, user: UserEntity) {
     const { name, type, price, fee, quantity, reason, date } = createStockDto;
+    const newDate = new Date(date);
 
+    newDate.setTime(
+      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
+    );
+
+    console.log(newDate);
     const newStock = new StockEntity({
       name,
       type,
@@ -24,7 +30,7 @@ export class StockService {
       fee,
       quantity,
       reason,
-      date,
+      date: newDate,
     });
 
     newStock.user = user;
@@ -69,7 +75,9 @@ export class StockService {
   }
 
   update(id: number, updateStockDto: UpdateStockDto) {
-    this.stockRepository.update(id, updateStockDto);
+    const { date, ...others } = updateStockDto;
+
+    this.stockRepository.update(id, { ...others });
   }
 
   deleteOne(id: number) {
