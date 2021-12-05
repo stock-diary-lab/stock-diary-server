@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiaryRepository } from './diaries.repository';
+import { UserEntity } from 'src/auth/user.entity';
+import { DiaryEntity } from './diary.entity';
+import { Between } from 'typeorm';
 
 @Injectable()
 export class DiaryService {
@@ -11,35 +14,60 @@ export class DiaryService {
     private DiaryRepository: DiaryRepository,
   ) {}
 
-  async createDiaryIfExist(
-    createDiaryDto: CreateDiaryDto,
-  ): Promise<{ diary: any }> {
-    const { content } = createDiaryDto;
+  async createDiary(createDiaryDto: CreateDiaryDto, user: UserEntity) {
+    const { content, date } = createDiaryDto;
+    const newDate = new Date(date);
+    newDate.setTime(
+      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
+    );
 
-    const diary = await this.DiaryRepository.findOne({
+    const newDiary = new DiaryEntity({
       content,
+      date: newDate,
     });
 
-    if (!diary) {
-      await this.DiaryRepository.createByProvider(createDiaryDto);
-    }
+    newDiary.user = user;
 
-    return { diary };
+    await this.DiaryRepository.save(newDiary);
+
+    return { message: 'create success' };
   }
 
-  findAll() {
-    return this.DiaryRepository.find();
+  async findAll(startDate: Date, endDate: Date, user: UserEntity) {
+    const newEndDate = new Date(endDate);
+    newEndDate.setDate(new Date(endDate).getDate() + 1);
+
+    const diaries = await this.DiaryRepository.find({
+      where: {
+        date: Between(
+          new Date(startDate).toISOString(),
+          new Date(newEndDate).toISOString(),
+        ),
+        user,
+      },
+    });
+
+    return diaries.reduce((acc, cur) => {
+      const localeDate = cur.date.toLocaleDateString();
+
+      if (acc[localeDate]) {
+        acc[localeDate].push(cur);
+      } else {
+        acc[localeDate] = [cur];
+      }
+      return acc;
+    }, {});
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.DiaryRepository.find({ where: { id } });
   }
 
-  update(id: string, updateDiaryDto: UpdateDiaryDto) {
+  update(id: number, updateDiaryDto: UpdateDiaryDto) {
     this.DiaryRepository.update(id, updateDiaryDto);
   }
 
-  deleteOne(id: string) {
+  deleteOne(id: number) {
     this.DiaryRepository.delete({ id });
     return 'delete success';
   }

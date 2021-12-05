@@ -9,6 +9,7 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { IUser, Provider } from './user.interface';
 import { StockEntity } from 'src/stock/stock.entity';
+import { DiaryEntity } from 'src/diary/diary.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity implements IUser {
@@ -38,6 +39,9 @@ export class UserEntity implements IUser {
 
   @OneToMany(() => StockEntity, (stock) => stock.user)
   stocks: StockEntity[];
+
+  @OneToMany(() => DiaryEntity, (diary) => diary.user)
+  diaries: DiaryEntity[];
 
   constructor(partial: Partial<UserEntity>) {
     if (partial) {

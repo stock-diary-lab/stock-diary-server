@@ -5,7 +5,6 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IDiary } from './diary.interface';
@@ -15,11 +14,15 @@ import { UserEntity } from '../auth/user.entity';
 export class DiaryEntity implements IDiary {
   @ApiProperty({ description: '일지 고유 번호' })
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
   @ApiProperty({ description: '일지 내용' })
   @Column()
   content: string;
+
+  @ApiProperty({ description: '날짜' })
+  @Column()
+  date: Date;
 
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })
@@ -29,13 +32,13 @@ export class DiaryEntity implements IDiary {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne((type) => UserEntity, (UserEntity) => UserEntity.stocks)
-  @JoinColumn({ name: 'ref_userId' })
+  @ManyToOne(() => UserEntity, (user) => user.diaries)
   user: UserEntity;
 
   constructor(partial: Partial<DiaryEntity>) {
     if (partial) {
       this.content = partial.content;
+      this.date = partial.date;
     }
   }
 }

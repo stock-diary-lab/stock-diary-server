@@ -22,7 +22,6 @@ export class StockService {
       newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
     );
 
-    console.log(newDate);
     const newStock = new StockEntity({
       name,
       type,

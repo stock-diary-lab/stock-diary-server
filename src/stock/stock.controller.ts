@@ -9,6 +9,7 @@ import {
   UseGuards,
   ValidationPipe,
   Query,
+  Req,
 } from '@nestjs/common';
 import { StockService } from './stock.service';
 import { AuthGuard } from '@nestjs/passport';
