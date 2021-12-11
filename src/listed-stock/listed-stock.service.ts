@@ -33,6 +33,8 @@ export class ListedStockService {
   }
 
   async findByName(name: string) {
+    if (name === '') return [];
+
     const listedStocks = await this.listedStockRepository.find({
       name: Like(`%${name}%`),
     });
