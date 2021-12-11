@@ -1,7 +1,8 @@
-import { Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get, Post, Query, Req } from '@nestjs/common';
 import { ListedStockService } from './listed-stock.service';
 import axios from 'axios';
 import { ApiResponse } from '@nestjs/swagger';
+import { ReadListedStockDto } from './dto/read-listed-stock.dto';
 
 @Controller('listed-stock')
 export class ListedStockController {
@@ -13,7 +14,7 @@ export class ListedStockController {
   })
   @Post()
   async create() {
-    const list: { korSencNm: string; shortnIsin: string }[] = [];
+    let list: { korSecnNm: string; shotnIsin: string }[] = [];
 
     const indexes = new Array(10).fill(0).map((el, idx) => idx);
 
@@ -24,13 +25,12 @@ export class ListedStockController {
         }&numOfRows=100&martTpcd=11`,
       );
 
-      list.push(response.data.response.body.items.item);
+      list = list.concat(response.data.response.body.items.item);
     }
 
     await this.listedStockService.createAll(list);
 
     return { message: 'create success' };
-    // return this.listedStockService.create(createListedStockDto);
   }
 
   @ApiResponse({
@@ -38,7 +38,7 @@ export class ListedStockController {
     description: '주식상장 리스트 조회',
   })
   @Get()
-  findAll() {
-    return this.listedStockService.findAll();
+  findAll(@Req() req, @Query() query: ReadListedStockDto) {
+    return this.listedStockService.findByName(query.name);
   }
 }

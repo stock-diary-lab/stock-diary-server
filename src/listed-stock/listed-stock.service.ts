@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Like } from 'typeorm';
 import { ListedStockEntity } from './entities/listed-stock.entity';
 import { MarketType } from './listed-stock.interface';
 import { ListedStockRepository } from './listed-stock.repository';
@@ -11,14 +12,14 @@ export class ListedStockService {
     private listedStockRepository: ListedStockRepository,
   ) {}
 
-  async createAll(list: { korSencNm: string; shortnIsin: string }[]) {
-    for await (const { korSencNm, shortnIsin } of list) {
-      // const found = await this.listedStockRepository.findOne({ id: korSencNm });
-      // if (found) return;
+  async createAll(list: { korSecnNm: string; shotnIsin: string }[]) {
+    for await (const { korSecnNm, shotnIsin } of list) {
+      const found = await this.listedStockRepository.findOne({ id: shotnIsin });
+      if (found) return;
 
       const newListedStock = new ListedStockEntity({
-        id: korSencNm,
-        name: shortnIsin,
+        id: shotnIsin,
+        name: korSecnNm,
         market: MarketType.KOSPI,
       });
 
@@ -28,6 +29,13 @@ export class ListedStockService {
 
   async findAll() {
     const listedStocks = await this.listedStockRepository.find();
+    return listedStocks;
+  }
+
+  async findByName(name: string) {
+    const listedStocks = await this.listedStockRepository.find({
+      name: Like(`%${name}%`),
+    });
     return listedStocks;
   }
 }

@@ -4,7 +4,7 @@ import { IListedStock, MarketType } from '../listed-stock.interface';
 
 @Entity({ name: 'listed_stocks' })
 export class ListedStockEntity implements IListedStock {
-  @ApiProperty({ description: '주식 종목 번호' })
+  @ApiProperty({ description: '주식 종목 코드' })
   @PrimaryColumn()
   id: string;
 
