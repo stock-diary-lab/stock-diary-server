@@ -11,12 +11,12 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { StockTransactionService } from './stockTransaction.service';
+import { StockTransactionService } from './stock-transaction.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { CreateStockTransactionDto } from './dto/create-stockTransaction.dto';
-import { UpdateStockTransactionDto } from './dto/update-stockTransaction.dto';
-import { ReadStockTransactionDto } from './dto/read-stockTransaction-dto';
+import { CreateStockTransactionDto } from './dto/create-stock-transaction.dto';
+import { UpdateStockTransactionDto } from './dto/update-stock-transaction.dto';
+import { ReadStockTransactionDto } from './dto/read-stock-transaction-dto';
 
 @Controller('stockTransaction')
 @UseGuards(AuthGuard())

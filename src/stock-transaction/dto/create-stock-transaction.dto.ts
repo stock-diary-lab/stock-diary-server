@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Type } from '../stockTransaction.interface';
+import { Type } from '../stock-transaction.interface';
 
 export class CreateStockTransactionDto {
   @ApiProperty({ description: '주식 종목명' })
