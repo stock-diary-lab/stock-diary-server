@@ -8,8 +8,9 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IUser, Provider } from './user.interface';
-import { StockTransactionEntity } from 'src/stock/stockTransaction.entity';
+import { StockTransactionEntity } from 'src/stock-transaction/stock-transaction.entity';
 import { DiaryEntity } from 'src/diary/diary.entity';
+import { FavoriteStockEntity } from 'src/favorite-stock/favorite-stock.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity implements IUser {
@@ -45,6 +46,9 @@ export class UserEntity implements IUser {
 
   @OneToMany(() => DiaryEntity, (diary) => diary.user)
   diaries: DiaryEntity[];
+
+  @OneToMany(() => FavoriteStockEntity, (favoriteStock) => favoriteStock.user)
+  favoriteStocks: FavoriteStockEntity[];
 
   constructor(partial: Partial<UserEntity>) {
     if (partial) {

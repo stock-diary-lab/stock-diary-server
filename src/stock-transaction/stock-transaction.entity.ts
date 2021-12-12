@@ -7,7 +7,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IStockTransaction, Type } from './stockTransaction.interface';
+import { IStockTransaction, Type } from './stock-transaction.interface';
 import { UserEntity } from '../auth/user.entity';
 
 @Entity({ name: 'stockTransactions' })

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { StockTransactionService } from './stockTransaction.service';
-import { StockTransactionController } from './stockTransaction.controller';
+import { StockTransactionService } from './stock-transaction.service';
+import { StockTransactionController } from './stock-transaction.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { StockTransactionRepository } from './stocksTransactions.repository';
+import { StockTransactionRepository } from './stock-transactions.repository';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
