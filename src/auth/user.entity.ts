@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IUser, Provider } from './user.interface';
-import { StockEntity } from 'src/stock/stock.entity';
+import { StockTransactionEntity } from 'src/stock/stockTransaction.entity';
 import { DiaryEntity } from 'src/diary/diary.entity';
 
 @Entity({ name: 'users' })
@@ -37,8 +37,11 @@ export class UserEntity implements IUser {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @OneToMany(() => StockEntity, (stock) => stock.user)
-  stocks: StockEntity[];
+  @OneToMany(
+    () => StockTransactionEntity,
+    (stockTransaction) => stockTransaction.user,
+  )
+  stockTransactions: StockTransactionEntity[];
 
   @OneToMany(() => DiaryEntity, (diary) => diary.user)
   diaries: DiaryEntity[];
