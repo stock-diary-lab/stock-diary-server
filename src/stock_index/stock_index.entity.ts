@@ -37,7 +37,7 @@ export class StockIndexEntity implements IStockIndex {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne((type) => UserEntity, (UserEntity) => UserEntity.stocks)
+  @ManyToOne((type) => UserEntity, (UserEntity) => UserEntity.stockTransactions)
   @JoinColumn({ name: 'ref_userId' })
   user: UserEntity;
 

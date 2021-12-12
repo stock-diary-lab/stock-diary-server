@@ -7,11 +7,11 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IStock, Type } from './stock.interface';
+import { IStockTransaction, Type } from './stockTransaction.interface';
 import { UserEntity } from '../auth/user.entity';
 
-@Entity({ name: 'stocks' })
-export class StockEntity implements IStock {
+@Entity({ name: 'stockTransactions' })
+export class StockTransactionEntity implements IStockTransaction {
   @ApiProperty({ description: '스톡 고유 번호' })
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -52,10 +52,10 @@ export class StockEntity implements IStock {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.stocks)
+  @ManyToOne(() => UserEntity, (user) => user.stockTransactions)
   user: UserEntity;
 
-  constructor(partial: Partial<StockEntity>) {
+  constructor(partial: Partial<StockTransactionEntity>) {
     if (partial) {
       this.name = partial.name;
       this.type = partial.type;
