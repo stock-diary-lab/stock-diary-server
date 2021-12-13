@@ -65,10 +65,11 @@ export class DiaryService {
 
   update(id: number, updateDiaryDto: UpdateDiaryDto) {
     this.DiaryRepository.update(id, updateDiaryDto);
+    return { message: 'update success' };
   }
 
   deleteOne(id: number) {
     this.DiaryRepository.delete({ id });
-    return 'delete success';
+    return { message: 'delete success' };
   }
 }
