@@ -1,0 +1,12 @@
+module.exports = {
+  type: 'mysql',
+  host: 'mysql',
+  port: 3306,
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  entities: ['dist/**/*.entity{.ts,.js}'],
+  synchronize: true,
+  timezone: 'Z',
+  logging: true,
+};
