@@ -22,7 +22,7 @@ export class UserEntity implements IUser {
   providerId: string;
 
   @ApiProperty({ description: '닉네임' })
-  @Column()
+  @Column({ charset: 'utf8' })
   nickname: string;
 
   @ApiProperty({ description: '소셜 로그인 서비스 제공자' })

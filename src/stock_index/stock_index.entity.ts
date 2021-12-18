@@ -18,7 +18,7 @@ export class StockIndexEntity implements IStockIndex {
   id: string;
 
   @ApiProperty({ description: '주식 종목명' })
-  @Column()
+  @Column({ charset: 'utf8' })
   name: string;
 
   @ApiProperty({ description: '수치' })

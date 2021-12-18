@@ -17,7 +17,7 @@ export class DiaryEntity implements IDiary {
   id: number;
 
   @ApiProperty({ description: '일지 내용' })
-  @Column()
+  @Column({ charset: 'utf8' })
   content: string;
 
   @ApiProperty({ description: '날짜' })
