@@ -3,7 +3,7 @@ export enum Type {
   SELL = 'sell',
 }
 
-export interface IStock {
+export interface IStockTransaction {
   name: string;
   type: Type;
   price: number;
