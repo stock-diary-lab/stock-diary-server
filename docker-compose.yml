@@ -28,8 +28,3 @@ services:
       - MYSQL_DATABASE=${DB_DATABASE}
     ports:
       - '3307:3306'
-
-networks:
-  default:
-    external:
-      name: app
