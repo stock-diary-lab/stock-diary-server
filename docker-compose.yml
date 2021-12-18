@@ -4,9 +4,7 @@ services:
   backend:
     container_name: zazu_backend
     restart: always
-    build:
-      network: host
-      context: .
+    build: .
     environment:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_SECRET=${GOOGLE_SECRET}
