@@ -9,11 +9,11 @@ export class ListedStockEntity implements IListedStock {
   id: string;
 
   @ApiProperty({ description: '종목명' })
-  @Column()
+  @Column({ charset: 'utf8' })
   name: string;
 
   @ApiProperty({ description: '산업군' })
-  @Column({ nullable: true })
+  @Column({ nullable: true, charset: 'utf8' })
   industry: string;
 
   @ApiProperty({ description: '소속된 시장' })

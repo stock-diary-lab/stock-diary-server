@@ -17,7 +17,7 @@ export class StockTransactionEntity implements IStockTransaction {
   id: number;
 
   @ApiProperty({ description: '주식 종목명' })
-  @Column()
+  @Column({ charset: 'utf8' })
   name: string;
 
   @ApiProperty({ description: '매매 유형' })
@@ -37,7 +37,7 @@ export class StockTransactionEntity implements IStockTransaction {
   fee: number;
 
   @ApiProperty({ description: '이유' })
-  @Column()
+  @Column({ charset: 'utf8' })
   reason: string;
 
   @ApiProperty({ description: '날짜' })
