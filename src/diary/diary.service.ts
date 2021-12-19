@@ -48,7 +48,7 @@ export class DiaryService {
     });
 
     return diaries.reduce((acc, cur) => {
-      const localeDate = cur.date.toLocaleDateString();
+      const localeDate = cur.date.toLocaleDateString('ko-kr');
 
       if (acc[localeDate]) {
         acc[localeDate].push(cur);
