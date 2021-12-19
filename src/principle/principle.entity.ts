@@ -7,18 +7,18 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IFavoriteStock } from './favorite-stock.interface';
+import { IPrinciple } from './principle.interface';
 import { UserEntity } from '../auth/user.entity';
 
-@Entity({ name: 'favoriteStocks' })
-export class FavoriteStockEntity implements IFavoriteStock {
-  @ApiProperty({ description: '최선호종목 고유 번호' })
+@Entity({ name: 'principles' })
+export class PrincipleEntity implements IPrinciple {
+  @ApiProperty({ description: '원칙 고유 번호' })
   @PrimaryGeneratedColumn('increment')
-  id: string;
+  id: number;
 
-  @ApiProperty({ description: '최선호종목 여부' })
-  @Column()
-  isFavorite: boolean;
+  @ApiProperty({ description: '원칙 내용' })
+  @Column({ charset: 'utf8' })
+  content: string;
 
   @ApiProperty({ description: '날짜' })
   @Column()
@@ -32,12 +32,12 @@ export class FavoriteStockEntity implements IFavoriteStock {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.favoriteStocks)
+  @ManyToOne(() => UserEntity, (user) => user.diaries)
   user: UserEntity;
 
-  constructor(partial: Partial<FavoriteStockEntity>) {
+  constructor(partial: Partial<PrincipleEntity>) {
     if (partial) {
-      this.isFavorite = partial.isFavorite;
+      this.content = partial.content;
       this.date = partial.date;
     }
   }
