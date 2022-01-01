@@ -62,15 +62,15 @@ export class FavoriteStockService {
     }, {});
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.FavoriteStockRepository.find({ where: { id } });
   }
 
-  update(id: number, updateFavoriteStockDto: UpdateFavoriteStockDto) {
+  update(id: string, updateFavoriteStockDto: UpdateFavoriteStockDto) {
     this.FavoriteStockRepository.update(id, updateFavoriteStockDto);
   }
 
-  deleteOne(id: number) {
+  deleteOne(id: string) {
     this.FavoriteStockRepository.delete({ id });
     return 'delete success';
   }

@@ -57,7 +57,7 @@ export class FavoriteStockController {
   })
   @ApiBearerAuth('jwt')
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: string) {
     return this.favoriteStockService.findOne(id);
   }
 
@@ -66,7 +66,7 @@ export class FavoriteStockController {
   })
   @Patch(':id')
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateFavoriteStockDto: UpdateFavoriteStockDto,
   ) {
     return this.favoriteStockService.update(id, updateFavoriteStockDto);
@@ -76,7 +76,7 @@ export class FavoriteStockController {
     status: 200,
   })
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id') id: string) {
     return this.favoriteStockService.deleteOne(id);
   }
 }
