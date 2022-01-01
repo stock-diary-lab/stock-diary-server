@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/auth/user.entity';
-import { Between, CircularRelationsError } from 'typeorm';
+import { Between } from 'typeorm';
 import { CreateStockTransactionDto } from './dto/create-stock-transaction.dto';
 import { UpdateStockTransactionDto } from './dto/update-stock-transaction.dto';
 import { StockTransactionEntity } from './stock-transaction.entity';
