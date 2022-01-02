@@ -6,6 +6,7 @@ export enum MarketType {
 export interface IListedStock {
   id: string;
   name: string;
-  industry?: string;
+  largeSector?: string;
+  mediumSector?: string;
   market: MarketType;
 }
