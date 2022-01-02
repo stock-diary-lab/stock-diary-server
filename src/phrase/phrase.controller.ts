@@ -1,72 +1,41 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  ValidationPipe,
-  Req,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Patch, Post } from '@nestjs/common';
 import { PhraseService } from './phrase.service';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
-import { CreatePhraseDto } from './dto/create-phrase.dto';
-import { UpdatePhraseDto } from './dto/update-phrase.dto';
-import { ReadPhraseDto } from './dto/read-phrase-dto';
+import { ApiResponse } from '@nestjs/swagger';
+import { phrases } from './static/phrase';
 
 @Controller('phrase')
-@UseGuards(AuthGuard())
-@ApiBearerAuth('jwt')
 export class PhraseController {
   constructor(private readonly phraseService: PhraseService) {}
 
   @ApiResponse({
     status: 200,
+    description: '노출되는 명언 조회',
+  })
+  @Get()
+  async getDisplayedPhrases() {
+    return this.phraseService.getDisplayedPhrases();
+  }
+
+  @ApiResponse({
+    status: 201,
+    description: '명언 DB 저장(1회만 실행)',
   })
   @Post()
-  async create(
-    @Req() req,
-    @Body(ValidationPipe) createPhraseDto: CreatePhraseDto,
-  ) {
-    return await this.phraseService.createPhrase(createPhraseDto, req.user);
+  async bulkCreate() {
+    for await (const phrase of phrases) {
+      this.phraseService.create(phrase);
+    }
+
+    return { message: 'bulk create success' };
   }
 
   @ApiResponse({
-    status: 200,
-    description: '명언 정보 리턴 api',
+    status: 201,
+    description: '노출되는 명언 바꿔주기',
   })
-  @ApiBearerAuth('jwt')
-  @Get()
-  findAll(@Req() req, @Query() query: ReadPhraseDto) {
-    return this.phraseService.findAll(query.startDate, query.endDate, req.user);
-  }
-
-  @ApiResponse({
-    status: 200,
-  })
-  @ApiBearerAuth('jwt')
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.phraseService.findOne(id);
-  }
-
-  @ApiResponse({
-    status: 200,
-  })
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updatePhraseDto: UpdatePhraseDto) {
-    return this.phraseService.update(id, updatePhraseDto);
-  }
-
-  @ApiResponse({
-    status: 200,
-  })
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.phraseService.deleteOne(id);
+  @Patch()
+  async updateDisplay() {
+    await this.phraseService.updateDisplay();
+    return { message: 'update display success' };
   }
 }

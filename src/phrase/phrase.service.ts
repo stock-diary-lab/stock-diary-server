@@ -1,76 +1,63 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreatePhraseDto } from './dto/create-phrase.dto';
-import { UpdatePhraseDto } from './dto/update-phrase.dto';
-import { PhraseRepository } from './phrases.repository';
-import { UserEntity } from 'src/auth/user.entity';
-import { PhraseEntity } from './phrase.entity';
-import { Between } from 'typeorm';
+import { PhraseEntity } from './entities/phrase.entity';
+import { PhraseRepository } from './phrase.repository';
 
 @Injectable()
 export class PhraseService {
   constructor(
     @InjectRepository(PhraseRepository)
-    private PhraseRepository: PhraseRepository,
+    private phraseRepository: PhraseRepository,
   ) {}
 
-  async createPhrase(createPhraseDto: CreatePhraseDto, user: UserEntity) {
-    const { name, content, date } = createPhraseDto;
-    const newDate = new Date(date);
-    newDate.setTime(
-      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
+  async getDisplayedPhrases() {
+    const phrases = await this.phraseRepository.find({ display: true });
+    return phrases;
+  }
+
+  async create(createPhraseDto: Partial<CreatePhraseDto>) {
+    const newPhrase = new PhraseEntity({
+      ...createPhraseDto,
+      display: false,
+    });
+
+    await this.phraseRepository.save(newPhrase);
+  }
+
+  async updateDisplay() {
+    const phrasesBeingDisplayed = await this.phraseRepository.find({
+      display: true,
+    });
+
+    const LENGTH = 135;
+
+    const phraseIdsBeingDisplayed = phrasesBeingDisplayed.map(
+      (phrase) => phrase.id,
     );
 
-    const newPhrase = new PhraseEntity({
-      name,
-      content,
-      date: newDate,
-    });
+    const getRandomInt = () => Math.floor(Math.random() * LENGTH) + 1;
 
-    newPhrase.user = user;
+    const randomIntArr = [];
 
-    await this.PhraseRepository.save(newPhrase);
-
-    return { message: 'create success' };
-  }
-
-  async findAll(startDate: Date, endDate: Date, user: UserEntity) {
-    const newEndDate = new Date(endDate);
-    newEndDate.setDate(new Date(endDate).getDate() + 1);
-
-    const phrases = await this.PhraseRepository.find({
-      where: {
-        date: Between(
-          new Date(startDate).toISOString(),
-          new Date(newEndDate).toISOString(),
-        ),
-        user,
-      },
-    });
-
-    return phrases.reduce((acc, cur) => {
-      const localeDate = cur.date.toLocaleDateString();
-
-      if (acc[localeDate]) {
-        acc[localeDate].push(cur);
+    while (randomIntArr.length < 2) {
+      const randomInt = getRandomInt();
+      if (
+        phraseIdsBeingDisplayed.includes(randomInt) ||
+        randomIntArr.includes(randomInt)
+      ) {
+        continue;
       } else {
-        acc[localeDate] = [cur];
+        randomIntArr.push(randomInt);
       }
-      return acc;
-    }, {});
-  }
+    }
 
-  findOne(id: number) {
-    return this.PhraseRepository.find({ where: { id } });
-  }
+    for await (const id of phraseIdsBeingDisplayed) {
+      await this.phraseRepository.update({ id }, { display: false });
+    }
 
-  update(id: number, updatePhraseDto: UpdatePhraseDto) {
-    this.PhraseRepository.update(id, updatePhraseDto);
-    return { message: 'update success' };
-  }
-
-  deleteOne(id: number) {
-    this.PhraseRepository.delete({ id });
-    return { message: 'delete success' };
+    for await (const id of randomIntArr) {
+      await this.phraseRepository.update({ id }, { display: true });
+    }
   }
 }

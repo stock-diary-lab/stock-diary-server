@@ -1,5 +1,6 @@
 export interface IPhrase {
-  name: string;
+  korName: string;
+  engName: string;
   content: string;
-  date: Date;
+  display: boolean;
 }
