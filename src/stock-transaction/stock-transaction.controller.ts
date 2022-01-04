@@ -18,7 +18,7 @@ import { CreateStockTransactionDto } from './dto/create-stock-transaction.dto';
 import { UpdateStockTransactionDto } from './dto/update-stock-transaction.dto';
 import { ReadStockTransactionDto } from './dto/read-stock-transaction-dto';
 
-@Controller('stockTransaction')
+@Controller('stock-transaction')
 @UseGuards(AuthGuard())
 @ApiBearerAuth('jwt')
 export class StockTransactionController {
