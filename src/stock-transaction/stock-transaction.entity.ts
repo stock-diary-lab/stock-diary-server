@@ -53,7 +53,7 @@ export class StockTransactionEntity implements IStockTransaction {
   @Column({ nullable: true })
   remainCount: number;
 
-  @ApiProperty({ description: '매수여부' })
+  @ApiProperty({ description: '전체 매수 여부' })
   @Column({ nullable: true })
   isAllSold: boolean;
 
@@ -82,6 +82,10 @@ export class StockTransactionEntity implements IStockTransaction {
       this.quantity = partial.quantity;
       this.reason = partial.reason;
       this.date = partial.date;
+      this.income = partial.income || null;
+      this.incomeRatio = partial.incomeRatio || null;
+      this.remainCount = partial.remainCount || null;
+      this.isAllSold = partial.isAllSold || null;
     }
   }
 }

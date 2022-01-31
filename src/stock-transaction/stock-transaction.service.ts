@@ -50,6 +50,9 @@ export class StockTransactionService {
 
     newStockTransaction.listedStock = listedStock;
 
+    // 매수
+    // 매도
+
     await this.stockTransactionRepository.save(newStockTransaction);
 
     return { message: 'create success' };
