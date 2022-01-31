@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/auth/user.entity';
-import { Between } from 'typeorm';
+import { ListedStockRepository } from 'src/listed-stock/listed-stock.repository';
+import { Between, Like } from 'typeorm';
 import { CreateStockTransactionDto } from './dto/create-stock-transaction.dto';
 import { UpdateStockTransactionDto } from './dto/update-stock-transaction.dto';
 import { StockTransactionEntity } from './stock-transaction.entity';
@@ -11,14 +12,16 @@ import { StockTransactionRepository } from './stock-transactions.repository';
 export class StockTransactionService {
   constructor(
     @InjectRepository(StockTransactionRepository)
+    @InjectRepository(ListedStockRepository)
     private stockTransactionRepository: StockTransactionRepository,
+    private listedStockRepository: ListedStockRepository,
   ) {}
 
   async createStockTransaction(
     createStockTransactionDto: CreateStockTransactionDto,
     user: UserEntity,
   ) {
-    const { name, type, price, fee, quantity, reason, date } =
+    const { listedStockId, type, price, fee, quantity, reason, date } =
       createStockTransactionDto;
     const newDate = new Date(date);
 
@@ -27,7 +30,6 @@ export class StockTransactionService {
     );
 
     const newStockTransaction = new StockTransactionEntity({
-      name,
       type,
       price,
       fee,
@@ -37,6 +39,16 @@ export class StockTransactionService {
     });
 
     newStockTransaction.user = user;
+
+    const listedStock = await this.listedStockRepository.findOne({
+      id: listedStockId,
+    });
+
+    if (!listedStock) {
+      throw new Error('주식 종목코드가 잘못되었음');
+    }
+
+    newStockTransaction.listedStock = listedStock;
 
     await this.stockTransactionRepository.save(newStockTransaction);
 
@@ -55,6 +67,7 @@ export class StockTransactionService {
         ),
         user,
       },
+      relations: ['listedStock'],
     });
 
     return stockTransactions.reduce((acc, cur) => {
@@ -71,6 +84,22 @@ export class StockTransactionService {
 
       return acc;
     }, {});
+  }
+
+  async findBySearchWord(searchWord: string, user: UserEntity) {
+    if (searchWord === '') return [];
+    return this.stockTransactionRepository.find({
+      where: [
+        { reason: Like(`%${searchWord}%`), user },
+        {
+          listedStock: {
+            name: Like(`%${searchWord}%`),
+          },
+          user,
+        },
+      ],
+      relations: ['listedStock'],
+    });
   }
 
   findOne(id: string) {

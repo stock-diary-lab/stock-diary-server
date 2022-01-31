@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { StockTransactionEntity } from 'src/stock-transaction/stock-transaction.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { IListedStock, MarketType } from '../listed-stock.interface';
 
 @Entity({ name: 'listed_stocks' })
@@ -23,6 +24,12 @@ export class ListedStockEntity implements IListedStock {
   @ApiProperty({ description: '소속된 시장' })
   @Column({ type: 'enum', enum: MarketType })
   market: MarketType;
+
+  @OneToMany(
+    () => StockTransactionEntity,
+    (stockTransaction) => stockTransaction.listedStock,
+  )
+  stockTransactions: StockTransactionEntity[];
 
   constructor(partial: Partial<ListedStockEntity>) {
     if (partial) {

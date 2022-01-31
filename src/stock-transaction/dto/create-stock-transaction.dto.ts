@@ -3,10 +3,6 @@ import { IsNotEmpty } from 'class-validator';
 import { Type } from '../stock-transaction.interface';
 
 export class CreateStockTransactionDto {
-  @ApiProperty({ description: '주식 종목명' })
-  @IsNotEmpty()
-  readonly name: string;
-
   @ApiProperty({
     enum: ['buy', 'sell'],
     description: '매매 유형',
@@ -31,4 +27,8 @@ export class CreateStockTransactionDto {
   @ApiProperty({ description: '날짜' })
   @IsNotEmpty()
   date: Date;
+
+  @ApiProperty({ description: '종목코드' })
+  @IsNotEmpty()
+  listedStockId: string;
 }

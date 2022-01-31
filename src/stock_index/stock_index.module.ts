@@ -2,11 +2,10 @@ import { Module } from '@nestjs/common';
 import { StockIndexService } from './stock_index.service';
 import { StockIndexController } from './stock_index.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-//import { StockIndexRepository } from './stock_indexes.repository';
-import { AuthModule } from 'src/auth/auth.module';
+import { StockIndexRepository } from './stock_indexes.repository';
 
 @Module({
-  imports: [AuthModule],
+  imports: [TypeOrmModule.forFeature([StockIndexRepository])],
   controllers: [StockIndexController],
   providers: [StockIndexService],
 })

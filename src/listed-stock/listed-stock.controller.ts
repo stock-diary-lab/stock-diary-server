@@ -50,6 +50,7 @@ export class ListedStockController {
     };
 
     const date = new Date();
+    date.setDate(date.getDate() - 1);
     const dateStr = `${date.getFullYear()}${(date.getMonth() + 1)
       .toString()
       .padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}`;
@@ -77,7 +78,6 @@ export class ListedStockController {
 
     //   list = list.concat(response.data.response.body.items.item);
     // }
-
     await this.listedStockService.createAll(list);
 
     return { message: 'create success' };
@@ -88,7 +88,7 @@ export class ListedStockController {
     description: '주식상장 리스트 조회',
   })
   @Get()
-  findAll(@Req() req, @Query() query: ReadListedStockDto) {
+  getAll(@Req() req, @Query() query: ReadListedStockDto) {
     return this.listedStockService.findByName(query.name);
   }
 
@@ -97,7 +97,16 @@ export class ListedStockController {
     description: '상위 5개 보유주식 조회',
   })
   @Get('/top')
-  findTopStocks(@Req() req) {
+  getTopStocks(@Req() req) {
     return this.listedStockService.getTopFiveStocks(req.user);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: '상위 5개 보유섹터 조회',
+  })
+  @Get('/top-sectors')
+  getTopSectors(@Req() req) {
+    return this.listedStockService.getTopFiveSectors(req.user);
   }
 }
