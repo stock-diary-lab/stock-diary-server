@@ -68,7 +68,7 @@ export class StockIndexService {
             indexName,
             currentValue,
             diff,
-            percent: percent.replace(/\%.*/g, ''),
+            percent: percent.replace(/(.*\%)(.*)/g, '$1'),
           };
         }),
       );
