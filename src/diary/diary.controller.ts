@@ -17,6 +17,7 @@ import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { ReadDiaryDto } from './dto/read-diary-dto';
+import { SearchDiaryDto } from './dto/search-diary-dto';
 
 @Controller('diary')
 @UseGuards(AuthGuard())
@@ -43,6 +44,16 @@ export class DiaryController {
   @Get()
   findAll(@Req() req, @Query() query: ReadDiaryDto) {
     return this.diaryService.findAll(query.startDate, query.endDate, req.user);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: '일지 정보 검색 api',
+  })
+  @ApiBearerAuth('jwt')
+  @Get('/search')
+  search(@Req() req, @Query() query: SearchDiaryDto) {
+    return this.diaryService.findBySearchWord(query.searchWord, req.user);
   }
 
   @ApiResponse({
