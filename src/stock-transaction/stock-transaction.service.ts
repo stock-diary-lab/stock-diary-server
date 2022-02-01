@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/auth/user.entity';
+import { BoughtStockRepository } from 'src/bought-stocks/bought-stock.repository';
+import { BoughtStockEntity } from 'src/bought-stocks/entities/bought-stock.entity';
 import { ListedStockRepository } from 'src/listed-stock/listed-stock.repository';
 import { Between, Like } from 'typeorm';
 import { CreateStockTransactionDto } from './dto/create-stock-transaction.dto';
 import { UpdateStockTransactionDto } from './dto/update-stock-transaction.dto';
 import { StockTransactionEntity } from './stock-transaction.entity';
+import { Type } from './stock-transaction.interface';
 import { StockTransactionRepository } from './stock-transactions.repository';
 
 @Injectable()
@@ -13,8 +16,10 @@ export class StockTransactionService {
   constructor(
     @InjectRepository(StockTransactionRepository)
     @InjectRepository(ListedStockRepository)
+    @InjectRepository(BoughtStockRepository)
     private stockTransactionRepository: StockTransactionRepository,
     private listedStockRepository: ListedStockRepository,
+    private boughtStockRepository: BoughtStockRepository,
   ) {}
 
   async createStockTransaction(
@@ -50,8 +55,63 @@ export class StockTransactionService {
 
     newStockTransaction.listedStock = listedStock;
 
+    const boughtStock = await this.boughtStockRepository.findOne({
+      listedStock: { id: listedStockId },
+      user,
+    });
     // 매수
+    if (type === Type.BUY) {
+      if (boughtStock) {
+        await this.boughtStockRepository.update(
+          { listedStock: { id: listedStockId }, user },
+          {
+            quantity: Number(boughtStock.quantity) + Number(quantity),
+            amount:
+              Number(boughtStock.amount) + Number(quantity) * Number(price),
+          },
+        );
+      } else {
+        const newBoughtStock = new BoughtStockEntity({
+          quantity,
+          amount: quantity * price,
+        });
+
+        newBoughtStock.user = user;
+        newBoughtStock.listedStock = listedStock;
+
+        await this.boughtStockRepository.save(newBoughtStock);
+      }
+    }
+
     // 매도
+    else if (type === Type.SELL) {
+      if (!boughtStock) {
+        throw new Error('매수하지 않은 주식을 매도');
+      }
+
+      if (
+        boughtStock.quantity - Number(quantity) < 0 ||
+        boughtStock.amount - quantity * price < 0
+      ) {
+        throw new Error('매도량이 매수량보다 많음');
+      }
+
+      const avgPrice = boughtStock.amount / boughtStock.quantity;
+
+      const income = (price - avgPrice) * quantity;
+      const incomeRatio = (price - avgPrice) / 100;
+
+      newStockTransaction.income = income;
+      newStockTransaction.incomeRatio = incomeRatio;
+
+      await this.boughtStockRepository.update(
+        { listedStock: { id: listedStockId }, user },
+        {
+          quantity: boughtStock.quantity - quantity,
+          amount: boughtStock.amount - quantity * price,
+        },
+      );
+    }
 
     await this.stockTransactionRepository.save(newStockTransaction);
 

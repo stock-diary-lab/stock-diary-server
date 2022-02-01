@@ -6,6 +6,7 @@ import { StockTransactionModule } from './stock-transaction/stock-transaction.mo
 import { StockIndexModule } from './stock_index/stock_index.module';
 import { ListedStockModule } from './listed-stock/listed-stock.module';
 import { PhraseModule } from './phrase/phrase.module';
+import { BoughtStocksModule } from './bought-stocks/bought-stocks.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PhraseModule } from './phrase/phrase.module';
     StockIndexModule,
     ListedStockModule,
     PhraseModule,
+    BoughtStocksModule,
   ],
 })
 export class AppModule {}

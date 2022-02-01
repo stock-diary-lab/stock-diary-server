@@ -10,4 +10,6 @@ export interface IStockTransaction {
   quantity: number;
   reason: string;
   date: Date;
+  income: number;
+  incomeRatio: number;
 }
