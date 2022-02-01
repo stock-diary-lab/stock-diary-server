@@ -4,12 +4,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IStockIndex } from './stock_index.interface';
-import { UserEntity } from '../auth/user.entity';
 
 @Entity({ name: 'stock_indexes' })
 export class StockIndexEntity implements IStockIndex {
@@ -36,10 +33,6 @@ export class StockIndexEntity implements IStockIndex {
   @ApiProperty({ description: '수정시각' })
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
-
-  @ManyToOne((type) => UserEntity, (UserEntity) => UserEntity.stockTransactions)
-  @JoinColumn({ name: 'ref_userId' })
-  user: UserEntity;
 
   constructor(partial: Partial<StockIndexEntity>) {
     if (partial) {

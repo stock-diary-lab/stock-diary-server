@@ -5,13 +5,12 @@ import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { DiaryRepository } from './diaries.repository';
 import { UserEntity } from 'src/auth/user.entity';
 import { DiaryEntity } from './diary.entity';
-import { Between } from 'typeorm';
-
+import { Between, Like } from 'typeorm';
 @Injectable()
 export class DiaryService {
   constructor(
     @InjectRepository(DiaryRepository)
-    private DiaryRepository: DiaryRepository,
+    private diaryRepository: DiaryRepository,
   ) {}
 
   async createDiary(createDiaryDto: CreateDiaryDto, user: UserEntity) {
@@ -28,7 +27,7 @@ export class DiaryService {
 
     newDiary.user = user;
 
-    await this.DiaryRepository.save(newDiary);
+    await this.diaryRepository.save(newDiary);
 
     return { message: 'create success' };
   }
@@ -37,7 +36,7 @@ export class DiaryService {
     const newEndDate = new Date(endDate);
     newEndDate.setDate(new Date(endDate).getDate() + 1);
 
-    const diaries = await this.DiaryRepository.find({
+    const diaries = await this.diaryRepository.find({
       where: {
         date: Between(
           new Date(startDate).toISOString(),
@@ -59,17 +58,31 @@ export class DiaryService {
     }, {});
   }
 
+  async findBySearchWord(searchWord: string, user: UserEntity) {
+    if (!searchWord) return [];
+    const diaries = await this.diaryRepository.find({
+      user,
+      content: Like(`%${searchWord}%`),
+    });
+
+    return diaries.map((diary) => {
+      delete diary.createdAt;
+      delete diary.updatedAt;
+      return diary;
+    });
+  }
+
   findOne(id: number) {
-    return this.DiaryRepository.find({ where: { id } });
+    return this.diaryRepository.find({ where: { id } });
   }
 
   update(id: number, updateDiaryDto: UpdateDiaryDto) {
-    this.DiaryRepository.update(id, updateDiaryDto);
+    this.diaryRepository.update(id, updateDiaryDto);
     return { message: 'update success' };
   }
 
   deleteOne(id: number) {
-    this.DiaryRepository.delete({ id });
+    this.diaryRepository.delete({ id });
     return { message: 'delete success' };
   }
 }

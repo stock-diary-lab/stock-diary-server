@@ -17,8 +17,9 @@ import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateStockTransactionDto } from './dto/create-stock-transaction.dto';
 import { UpdateStockTransactionDto } from './dto/update-stock-transaction.dto';
 import { ReadStockTransactionDto } from './dto/read-stock-transaction-dto';
+import { SearchStockTransactionDto } from './dto/search-stock-transaction-dto';
 
-@Controller('stockTransaction')
+@Controller('stock-transaction')
 @UseGuards(AuthGuard())
 @ApiBearerAuth('jwt')
 export class StockTransactionController {
@@ -50,6 +51,19 @@ export class StockTransactionController {
     return await this.stockTransactionService.findAll(
       query.startDate,
       query.endDate,
+      req.user,
+    );
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: '거래내역 검색 결과 api',
+  })
+  @ApiBearerAuth('jwt')
+  @Get('/search')
+  async getSearchResult(@Req() req, @Query() query: SearchStockTransactionDto) {
+    return await this.stockTransactionService.findBySearchWord(
+      query.searchWord,
       req.user,
     );
   }

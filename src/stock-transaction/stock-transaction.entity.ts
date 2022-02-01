@@ -9,16 +9,13 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 import { IStockTransaction, Type } from './stock-transaction.interface';
 import { UserEntity } from '../auth/user.entity';
+import { ListedStockEntity } from 'src/listed-stock/entities/listed-stock.entity';
 
 @Entity({ name: 'stockTransactions' })
 export class StockTransactionEntity implements IStockTransaction {
-  @ApiProperty({ description: '스톡 고유 번호' })
+  @ApiProperty({ description: '거래내역 고유 번호' })
   @PrimaryGeneratedColumn('increment')
   id: number;
-
-  @ApiProperty({ description: '주식 종목명' })
-  @Column({ charset: 'utf8' })
-  name: string;
 
   @ApiProperty({ description: '매매 유형' })
   @Column({ type: 'enum', enum: Type })
@@ -44,6 +41,14 @@ export class StockTransactionEntity implements IStockTransaction {
   @Column()
   date: Date;
 
+  @ApiProperty({ description: '실현손익' })
+  @Column({ nullable: true })
+  income: number;
+
+  @ApiProperty({ description: '손익률' })
+  @Column({ nullable: true })
+  incomeRatio: number;
+
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -55,15 +60,22 @@ export class StockTransactionEntity implements IStockTransaction {
   @ManyToOne(() => UserEntity, (user) => user.stockTransactions)
   user: UserEntity;
 
+  @ManyToOne(
+    () => ListedStockEntity,
+    (listedStock) => listedStock.stockTransactions,
+  )
+  listedStock: ListedStockEntity;
+
   constructor(partial: Partial<StockTransactionEntity>) {
     if (partial) {
-      this.name = partial.name;
       this.type = partial.type;
       this.price = partial.price;
       this.fee = partial.fee;
       this.quantity = partial.quantity;
       this.reason = partial.reason;
       this.date = partial.date;
+      this.income = partial.income || null;
+      this.incomeRatio = partial.incomeRatio || null;
     }
   }
 }

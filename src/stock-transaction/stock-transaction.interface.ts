@@ -4,11 +4,12 @@ export enum Type {
 }
 
 export interface IStockTransaction {
-  name: string;
   type: Type;
   price: number;
   fee: number;
   quantity: number;
   reason: string;
   date: Date;
+  income: number;
+  incomeRatio: number;
 }
