@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/auth/user.entity';
-import { BoughtStockRepository } from 'src/bought-stocks/bought-stock.repository';
-import { BoughtStockEntity } from 'src/bought-stocks/entities/bought-stock.entity';
+import { BoughtStockRepository } from 'src/bought-stock/bought-stock.repository';
+import { BoughtStockEntity } from 'src/bought-stock/entities/bought-stock.entity';
 import { ListedStockRepository } from 'src/listed-stock/listed-stock.repository';
 import { Between, Like } from 'typeorm';
 import { CreateStockTransactionDto } from './dto/create-stock-transaction.dto';
@@ -89,10 +89,7 @@ export class StockTransactionService {
         throw new Error('매수하지 않은 주식을 매도');
       }
 
-      if (
-        boughtStock.quantity - Number(quantity) < 0 ||
-        boughtStock.amount - quantity * price < 0
-      ) {
+      if (boughtStock.quantity - Number(quantity) < 0) {
         throw new Error('매도량이 매수량보다 많음');
       }
 
@@ -104,11 +101,15 @@ export class StockTransactionService {
       newStockTransaction.income = income;
       newStockTransaction.incomeRatio = incomeRatio;
 
+      const updatedQuantity = boughtStock.quantity - quantity;
+      const updatedAmount =
+        updatedQuantity === 0 ? 0 : boughtStock.amount - quantity * price;
+
       await this.boughtStockRepository.update(
         { listedStock: { id: listedStockId }, user },
         {
-          quantity: boughtStock.quantity - quantity,
-          amount: boughtStock.amount - quantity * price,
+          quantity: updatedQuantity,
+          amount: updatedAmount,
         },
       );
     }

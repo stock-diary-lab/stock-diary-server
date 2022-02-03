@@ -11,7 +11,7 @@ import { IUser, Provider } from './user.interface';
 import { StockTransactionEntity } from 'src/stock-transaction/stock-transaction.entity';
 import { DiaryEntity } from 'src/diary/diary.entity';
 import { FavoriteStockEntity } from 'src/favorite-stock/favorite-stock.entity';
-import { BoughtStockEntity } from 'src/bought-stocks/entities/bought-stock.entity';
+import { BoughtStockEntity } from 'src/bought-stock/entities/bought-stock.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity implements IUser {
