@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BoughtStockEntity } from 'src/bought-stocks/entities/bought-stock.entity';
+import { BoughtStockEntity } from 'src/bought-stock/entities/bought-stock.entity';
 import { StockTransactionEntity } from 'src/stock-transaction/stock-transaction.entity';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { IListedStock, MarketType } from '../listed-stock.interface';

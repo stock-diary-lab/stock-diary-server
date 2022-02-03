@@ -7,7 +7,6 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('listed-stock')
 @UseGuards(AuthGuard())
-@UseGuards(AuthGuard())
 @ApiBearerAuth('jwt')
 export class ListedStockController {
   constructor(private readonly listedStockService: ListedStockService) {}
@@ -92,21 +91,21 @@ export class ListedStockController {
     return this.listedStockService.findByName(query.name);
   }
 
-  @ApiResponse({
-    status: 200,
-    description: '상위 5개 보유주식 조회',
-  })
-  @Get('/top')
-  getTopStocks(@Req() req) {
-    return this.listedStockService.getTopFiveStocks(req.user);
-  }
+  // @ApiResponse({
+  //   status: 200,
+  //   description: '상위 5개 보유주식 조회',
+  // })
+  // @Get('/top')
+  // getTopStocks(@Req() req) {
+  //   return this.listedStockService.getTopFiveStocks(req.user);
+  // }
 
-  @ApiResponse({
-    status: 200,
-    description: '상위 5개 보유섹터 조회',
-  })
-  @Get('/top-sectors')
-  getTopSectors(@Req() req) {
-    return this.listedStockService.getTopFiveSectors(req.user);
-  }
+  // @ApiResponse({
+  //   status: 200,
+  //   description: '상위 5개 보유섹터 조회',
+  // })
+  // @Get('/top-sectors')
+  // getTopSectors(@Req() req) {
+  //   return this.listedStockService.getTopFiveSectors(req.user);
+  // }
 }

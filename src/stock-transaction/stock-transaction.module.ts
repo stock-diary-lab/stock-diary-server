@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { StockTransactionRepository } from './stock-transactions.repository';
 import { AuthModule } from 'src/auth/auth.module';
 import { ListedStockRepository } from 'src/listed-stock/listed-stock.repository';
-import { BoughtStockRepository } from 'src/bought-stocks/bought-stock.repository';
+import { BoughtStockRepository } from 'src/bought-stock/bought-stock.repository';
 
 @Module({
   imports: [
