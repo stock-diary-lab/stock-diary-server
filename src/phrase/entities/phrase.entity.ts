@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IPhrase } from '../phrase.interface';
 
-@Entity({ name: 'phrases' })
+@Entity({ name: 'phrase' })
 export class PhraseEntity implements IPhrase {
   @ApiProperty({ description: '명언 고유번호' })
   @PrimaryGeneratedColumn('increment')

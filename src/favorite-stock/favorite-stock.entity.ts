@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IFavoriteStock } from './favorite-stock.interface';
 import { UserEntity } from '../auth/user.entity';
 
-@Entity({ name: 'favoriteStocks' })
+@Entity({ name: 'favorite_stock' })
 export class FavoriteStockEntity implements IFavoriteStock {
   @ApiProperty({ description: '최선호종목 고유 번호' })
   @PrimaryGeneratedColumn('increment')

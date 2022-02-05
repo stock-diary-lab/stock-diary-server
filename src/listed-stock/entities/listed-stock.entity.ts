@@ -4,7 +4,7 @@ import { StockTransactionEntity } from 'src/stock-transaction/stock-transaction.
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { IListedStock, MarketType } from '../listed-stock.interface';
 
-@Entity({ name: 'listed_stocks' })
+@Entity({ name: 'listed_stock' })
 export class ListedStockEntity implements IListedStock {
   @ApiProperty({ description: '주식 종목 코드' })
   @PrimaryColumn()

@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IDiary } from './diary.interface';
 import { UserEntity } from '../auth/user.entity';
 
-@Entity({ name: 'diaries' })
+@Entity({ name: 'diary' })
 export class DiaryEntity implements IDiary {
   @ApiProperty({ description: '일지 고유 번호' })
   @PrimaryGeneratedColumn('increment')

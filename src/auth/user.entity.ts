@@ -13,7 +13,7 @@ import { DiaryEntity } from 'src/diary/diary.entity';
 import { FavoriteStockEntity } from 'src/favorite-stock/favorite-stock.entity';
 import { BoughtStockEntity } from 'src/bought-stock/entities/bought-stock.entity';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 export class UserEntity implements IUser {
   @ApiProperty({ description: '유저 고유 번호' })
   @PrimaryGeneratedColumn('increment')
