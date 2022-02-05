@@ -20,9 +20,6 @@ export class FavoriteStockService {
   ) {
     const { isFavorite, date } = createFavoriteStockDto;
     const newDate = new Date(date);
-    newDate.setTime(
-      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
-    );
 
     const newFavoriteStock = new FavoriteStockEntity({
       isFavorite,

@@ -21,7 +21,7 @@ export class DiaryEntity implements IDiary {
   content: string;
 
   @ApiProperty({ description: '날짜' })
-  @Column()
+  @Column({ type: 'date' })
   date: Date;
 
   @ApiProperty({ description: '생성시각' })

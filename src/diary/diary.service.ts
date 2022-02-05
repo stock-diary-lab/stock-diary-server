@@ -16,9 +16,6 @@ export class DiaryService {
   async createDiary(createDiaryDto: CreateDiaryDto, user: UserEntity) {
     const { content, date } = createDiaryDto;
     const newDate = new Date(date);
-    newDate.setTime(
-      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
-    );
 
     const newDiary = new DiaryEntity({
       content,

@@ -30,10 +30,6 @@ export class StockTransactionService {
       createStockTransactionDto;
     const newDate = new Date(date);
 
-    newDate.setTime(
-      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
-    );
-
     const newStockTransaction = new StockTransactionEntity({
       type,
       price,
@@ -136,7 +132,6 @@ export class StockTransactionService {
 
     return stockTransactions.reduce((acc, cur) => {
       const date = new Date(cur.date);
-      date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
       const localeDate = date.toLocaleDateString('ko-KR');
 
