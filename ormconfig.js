@@ -7,5 +7,4 @@ module.exports = {
   database: process.env.DB_DATABASE,
   entities: ['dist/**/*.entity{.ts,.js}'],
   synchronize: true,
-  timezone: 'Z',
 };
