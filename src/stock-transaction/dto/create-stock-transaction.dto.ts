@@ -26,7 +26,7 @@ export class CreateStockTransactionDto {
 
   @ApiProperty({ description: '날짜' })
   @IsNotEmpty()
-  date: Date;
+  date: string;
 
   @ApiProperty({ description: '종목코드' })
   @IsNotEmpty()

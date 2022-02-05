@@ -6,11 +6,11 @@ export class ReadStockTransactionDto {
     description: '조회하고자 하는 주식내역의 시작날짜',
   })
   @IsNotEmpty()
-  readonly startDate: Date;
+  readonly startDate: string;
 
   @ApiProperty({
     description: '조회하고자 하는 주식내역의 마지막날짜',
   })
   @IsNotEmpty()
-  readonly endDate: Date;
+  readonly endDate: string;
 }

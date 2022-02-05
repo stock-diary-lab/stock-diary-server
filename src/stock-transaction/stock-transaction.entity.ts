@@ -39,7 +39,7 @@ export class StockTransactionEntity implements IStockTransaction {
 
   @ApiProperty({ description: '날짜' })
   @Column({ type: 'date' })
-  date: Date;
+  date: string;
 
   @ApiProperty({ description: '실현손익' })
   @Column({ nullable: true })

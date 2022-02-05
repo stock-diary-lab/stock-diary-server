@@ -8,5 +8,5 @@ export class CreateFavoriteStockDto {
 
   @ApiProperty({ description: '날짜' })
   @IsNotEmpty()
-  date: Date;
+  date: string;
 }

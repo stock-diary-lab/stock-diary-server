@@ -22,7 +22,7 @@ export class DiaryEntity implements IDiary {
 
   @ApiProperty({ description: '날짜' })
   @Column({ type: 'date' })
-  date: Date;
+  date: string;
 
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })

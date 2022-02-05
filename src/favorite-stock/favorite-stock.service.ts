@@ -11,7 +11,7 @@ import { Between } from 'typeorm';
 export class FavoriteStockService {
   constructor(
     @InjectRepository(FavoriteStockRepository)
-    private FavoriteStockRepository: FavoriteStockRepository,
+    private favoriteStockRepository: FavoriteStockRepository,
   ) {}
 
   async createFavoriteStock(
@@ -19,56 +19,47 @@ export class FavoriteStockService {
     user: UserEntity,
   ) {
     const { isFavorite, date } = createFavoriteStockDto;
-    const newDate = new Date(date);
 
     const newFavoriteStock = new FavoriteStockEntity({
       isFavorite,
-      date: newDate,
+      date,
     });
 
     newFavoriteStock.user = user;
 
-    await this.FavoriteStockRepository.save(newFavoriteStock);
+    await this.favoriteStockRepository.save(newFavoriteStock);
 
     return { message: 'create success' };
   }
 
-  async findAll(startDate: Date, endDate: Date, user: UserEntity) {
-    const newEndDate = new Date(endDate);
-    newEndDate.setDate(new Date(endDate).getDate() + 1);
-
-    const favoriteStocks = await this.FavoriteStockRepository.find({
+  async findAll(startDate: string, endDate: string, user: UserEntity) {
+    const favoriteStocks = await this.favoriteStockRepository.find({
       where: {
-        date: Between(
-          new Date(startDate).toISOString(),
-          new Date(newEndDate).toISOString(),
-        ),
+        date: Between(startDate, endDate),
         user,
       },
     });
 
     return favoriteStocks.reduce((acc, cur) => {
-      const localeDate = cur.date.toLocaleDateString();
-
-      if (acc[localeDate]) {
-        acc[localeDate].push(cur);
+      if (acc[cur.date]) {
+        acc[cur.date].push(cur);
       } else {
-        acc[localeDate] = [cur];
+        acc[cur.date] = [cur];
       }
       return acc;
     }, {});
   }
 
   findOne(id: string) {
-    return this.FavoriteStockRepository.find({ where: { id } });
+    return this.favoriteStockRepository.find({ where: { id } });
   }
 
   update(id: string, updateFavoriteStockDto: UpdateFavoriteStockDto) {
-    this.FavoriteStockRepository.update(id, updateFavoriteStockDto);
+    this.favoriteStockRepository.update(id, updateFavoriteStockDto);
   }
 
   deleteOne(id: string) {
-    this.FavoriteStockRepository.delete({ id });
+    this.favoriteStockRepository.delete({ id });
     return 'delete success';
   }
 }

@@ -1,4 +1,4 @@
 export interface IDiary {
   content: string;
-  date: Date;
+  date: string;
 }

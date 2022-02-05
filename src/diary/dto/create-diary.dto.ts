@@ -8,5 +8,5 @@ export class CreateDiaryDto {
 
   @ApiProperty({ description: '날짜' })
   @IsNotEmpty()
-  date: Date;
+  date: string;
 }

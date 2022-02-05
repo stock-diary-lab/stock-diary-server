@@ -21,8 +21,8 @@ export class PrincipleEntity implements IPrinciple {
   content: string;
 
   @ApiProperty({ description: '날짜' })
-  @Column()
-  date: Date;
+  @Column({ type: 'date' })
+  date: string;
 
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })
