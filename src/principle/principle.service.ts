@@ -11,7 +11,7 @@ import { Between } from 'typeorm';
 export class PrincipleService {
   constructor(
     @InjectRepository(PrincipleRepository)
-    private PrincipleRepository: PrincipleRepository,
+    private principleRepository: PrincipleRepository,
   ) {}
 
   async createPrinciple(
@@ -19,60 +19,48 @@ export class PrincipleService {
     user: UserEntity,
   ) {
     const { content, date } = createPrincipleDto;
-    const newDate = new Date(date);
-    newDate.setTime(
-      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
-    );
 
     const newPrinciple = new PrincipleEntity({
       content,
-      date: newDate,
+      date,
     });
 
     newPrinciple.user = user;
 
-    await this.PrincipleRepository.save(newPrinciple);
+    await this.principleRepository.save(newPrinciple);
 
     return { message: 'create success' };
   }
 
-  async findAll(startDate: Date, endDate: Date, user: UserEntity) {
-    const newEndDate = new Date(endDate);
-    newEndDate.setDate(new Date(endDate).getDate() + 1);
-
-    const principles = await this.PrincipleRepository.find({
+  async findAll(startDate: string, endDate: string, user: UserEntity) {
+    const principles = await this.principleRepository.find({
       where: {
-        date: Between(
-          new Date(startDate).toISOString(),
-          new Date(newEndDate).toISOString(),
-        ),
+        date: Between(startDate, endDate),
         user,
       },
     });
 
     return principles.reduce((acc, cur) => {
-      const localeDate = cur.date.toLocaleDateString('ko-KR');
-
-      if (acc[localeDate]) {
-        acc[localeDate].push(cur);
+      if (acc[cur.date]) {
+        acc[cur.date].push(cur);
       } else {
-        acc[localeDate] = [cur];
+        acc[cur.date] = [cur];
       }
       return acc;
     }, {});
   }
 
   findOne(id: number) {
-    return this.PrincipleRepository.find({ where: { id } });
+    return this.principleRepository.find({ where: { id } });
   }
 
   update(id: number, updatePrincipleDto: UpdatePrincipleDto) {
-    this.PrincipleRepository.update(id, updatePrincipleDto);
+    this.principleRepository.update(id, updatePrincipleDto);
     return { message: 'update success' };
   }
 
   deleteOne(id: number) {
-    this.PrincipleRepository.delete({ id });
+    this.principleRepository.delete({ id });
     return { message: 'delete success' };
   }
 }

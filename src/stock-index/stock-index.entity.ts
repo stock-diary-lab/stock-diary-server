@@ -6,9 +6,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { IStockIndex } from './stock_index.interface';
+import { IStockIndex } from './stock-index.interface';
 
-@Entity({ name: 'stock_indexes' })
+@Entity({ name: 'stock_index' })
 export class StockIndexEntity implements IStockIndex {
   @ApiProperty({ description: '스톡 인덱스 고유 번호' })
   @PrimaryGeneratedColumn('increment')

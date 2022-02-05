@@ -4,7 +4,7 @@ import { ListedStockEntity } from 'src/listed-stock/entities/listed-stock.entity
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { IBoughtStock } from '../bought-stock.interface';
 
-@Entity({ name: 'boughtStocks' })
+@Entity({ name: 'bought_stock' })
 export class BoughtStockEntity implements IBoughtStock {
   @ApiProperty({ description: '고유 ID' })
   @PrimaryGeneratedColumn('increment')

@@ -10,7 +10,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IPrinciple } from './principle.interface';
 import { UserEntity } from '../auth/user.entity';
 
-@Entity({ name: 'principles' })
+@Entity({ name: 'principle' })
 export class PrincipleEntity implements IPrinciple {
   @ApiProperty({ description: '원칙 고유 번호' })
   @PrimaryGeneratedColumn('increment')
@@ -21,8 +21,8 @@ export class PrincipleEntity implements IPrinciple {
   content: string;
 
   @ApiProperty({ description: '날짜' })
-  @Column()
-  date: Date;
+  @Column({ type: 'date' })
+  date: string;
 
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })

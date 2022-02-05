@@ -1,9 +1,11 @@
-import { Controller, Get, Post } from '@nestjs/common';
-import { StockIndexService } from './stock_index.service';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { StockIndexService } from './stock-index.service';
 
 @Controller('stock-index')
-// @UseGuards(AuthGuard())
-// @ApiBearerAuth('jwt')
+@UseGuards(AuthGuard())
+@ApiBearerAuth('jwt')
 export class StockIndexController {
   constructor(private readonly stockIndexService: StockIndexService) {}
 
@@ -19,13 +21,10 @@ export class StockIndexController {
   //   return { message: '크롤링 및 DB 저장 완료' };
   // }
 
-  // @ApiResponse({
-  //   status: 200,
-  //   description: '지수 정보 조회 api',
-  // })
-  // @Get()
-  // async getIndexes() {
-  //   const indexes = await this.stockIndexService.getStockIndexes();
-  //   return indexes;
-  // }
+  @ApiResponse({ status: 200, description: '지수 정보 조회 api' })
+  @Get()
+  async getIndexes() {
+    const indexes = await this.stockIndexService.getStockIndexes();
+    return indexes;
+  }
 }

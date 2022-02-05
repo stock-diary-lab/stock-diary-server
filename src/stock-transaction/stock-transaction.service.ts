@@ -28,11 +28,6 @@ export class StockTransactionService {
   ) {
     const { listedStockId, type, price, fee, quantity, reason, date } =
       createStockTransactionDto;
-    const newDate = new Date(date);
-
-    newDate.setTime(
-      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
-    );
 
     const newStockTransaction = new StockTransactionEntity({
       type,
@@ -40,7 +35,7 @@ export class StockTransactionService {
       fee,
       quantity,
       reason,
-      date: newDate,
+      date,
     });
 
     newStockTransaction.user = user;
@@ -119,31 +114,20 @@ export class StockTransactionService {
     return { message: 'create success' };
   }
 
-  async findAll(startDate: Date, endDate: Date, user: UserEntity) {
-    const newEndDate = new Date(endDate);
-    newEndDate.setDate(new Date(endDate).getDate() + 1);
-
+  async findAll(startDate: string, endDate: string, user: UserEntity) {
     const stockTransactions = await this.stockTransactionRepository.find({
       where: {
-        date: Between(
-          new Date(startDate).toISOString(),
-          new Date(newEndDate).toISOString(),
-        ),
+        date: Between(startDate, endDate),
         user,
       },
       relations: ['listedStock'],
     });
 
     return stockTransactions.reduce((acc, cur) => {
-      const date = new Date(cur.date);
-      date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-
-      const localeDate = date.toLocaleDateString('ko-KR');
-
-      if (acc[localeDate]) {
-        acc[localeDate].push(cur);
+      if (acc[cur.date]) {
+        acc[cur.date].push(cur);
       } else {
-        acc[localeDate] = [cur];
+        acc[cur.date] = [cur];
       }
 
       return acc;

@@ -11,7 +11,7 @@ import { IStockTransaction, Type } from './stock-transaction.interface';
 import { UserEntity } from '../auth/user.entity';
 import { ListedStockEntity } from 'src/listed-stock/entities/listed-stock.entity';
 
-@Entity({ name: 'stockTransactions' })
+@Entity({ name: 'stock_transaction' })
 export class StockTransactionEntity implements IStockTransaction {
   @ApiProperty({ description: '거래내역 고유 번호' })
   @PrimaryGeneratedColumn('increment')
@@ -38,8 +38,8 @@ export class StockTransactionEntity implements IStockTransaction {
   reason: string;
 
   @ApiProperty({ description: '날짜' })
-  @Column()
-  date: Date;
+  @Column({ type: 'date' })
+  date: string;
 
   @ApiProperty({ description: '실현손익' })
   @Column({ nullable: true })

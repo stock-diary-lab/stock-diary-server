@@ -15,14 +15,10 @@ export class DiaryService {
 
   async createDiary(createDiaryDto: CreateDiaryDto, user: UserEntity) {
     const { content, date } = createDiaryDto;
-    const newDate = new Date(date);
-    newDate.setTime(
-      newDate.getTime() + -newDate.getTimezoneOffset() * 60 * 1000,
-    );
 
     const newDiary = new DiaryEntity({
       content,
-      date: newDate,
+      date,
     });
 
     newDiary.user = user;
@@ -32,27 +28,19 @@ export class DiaryService {
     return { message: 'create success' };
   }
 
-  async findAll(startDate: Date, endDate: Date, user: UserEntity) {
-    const newEndDate = new Date(endDate);
-    newEndDate.setDate(new Date(endDate).getDate() + 1);
-
+  async findAll(startDate: string, endDate: string, user: UserEntity) {
     const diaries = await this.diaryRepository.find({
       where: {
-        date: Between(
-          new Date(startDate).toISOString(),
-          new Date(newEndDate).toISOString(),
-        ),
+        date: Between(startDate, endDate),
         user,
       },
     });
 
     return diaries.reduce((acc, cur) => {
-      const localeDate = cur.date.toLocaleDateString('ko-KR');
-
-      if (acc[localeDate]) {
-        acc[localeDate].push(cur);
+      if (acc[cur.date]) {
+        acc[cur.date].push(cur);
       } else {
-        acc[localeDate] = [cur];
+        acc[cur.date] = [cur];
       }
       return acc;
     }, {});

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 // import * as puppeteer from 'puppeteer';
 // import { StockIndexEntity } from './stock_index.entity';
-import { StockIndexRepository } from './stock_indexes.repository';
+import { StockIndexRepository } from './stock-indexes.repository';
 
 @Injectable()
 export class StockIndexService {

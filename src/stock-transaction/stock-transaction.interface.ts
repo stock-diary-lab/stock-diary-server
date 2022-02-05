@@ -9,7 +9,7 @@ export interface IStockTransaction {
   fee: number;
   quantity: number;
   reason: string;
-  date: Date;
+  date: string;
   income: number;
   incomeRatio: number;
 }

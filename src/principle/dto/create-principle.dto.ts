@@ -8,5 +8,5 @@ export class CreatePrincipleDto {
 
   @ApiProperty({ description: '날짜' })
   @IsNotEmpty()
-  date: Date;
+  date: string;
 }
