@@ -138,7 +138,7 @@ export class StockTransactionService {
       const date = new Date(cur.date);
       date.setTime(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
 
-      const localeDate = date.toLocaleDateString('ko-kr');
+      const localeDate = date.toLocaleDateString('ko-KR');
 
       if (acc[localeDate]) {
         acc[localeDate].push(cur);
