@@ -9,14 +9,12 @@ import {
   UseGuards,
   ValidationPipe,
   Req,
-  Query,
 } from '@nestjs/common';
 import { PrincipleService } from './principle.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreatePrincipleDto } from './dto/create-principle.dto';
 import { UpdatePrincipleDto } from './dto/update-principle.dto';
-import { ReadPrincipleDto } from './dto/read-principle-dto';
 
 @Controller('principle')
 @UseGuards(AuthGuard())
@@ -25,7 +23,7 @@ export class PrincipleController {
   constructor(private readonly principleService: PrincipleService) {}
 
   @ApiResponse({
-    status: 200,
+    status: 201,
   })
   @Post()
   async create(
@@ -44,21 +42,8 @@ export class PrincipleController {
   })
   @ApiBearerAuth('jwt')
   @Get()
-  findAll(@Req() req, @Query() query: ReadPrincipleDto) {
-    return this.principleService.findAll(
-      query.startDate,
-      query.endDate,
-      req.user,
-    );
-  }
-
-  @ApiResponse({
-    status: 200,
-  })
-  @ApiBearerAuth('jwt')
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.principleService.findOne(id);
+  findAll(@Req() req) {
+    return this.principleService.findAll(req.user);
   }
 
   @ApiResponse({

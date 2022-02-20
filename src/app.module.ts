@@ -9,6 +9,7 @@ import { PhraseModule } from './phrase/phrase.module';
 import { BoughtStocksModule } from './bought-stock/bought-stock.module';
 import { ConfigModule } from '@nestjs/config';
 import { FavoriteStockModule } from './favorite-stock/favorite-stock.module';
+import { PrincipleModule } from './principle/principle.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { FavoriteStockModule } from './favorite-stock/favorite-stock.module';
     PhraseModule,
     BoughtStocksModule,
     FavoriteStockModule,
+    PrincipleModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath:

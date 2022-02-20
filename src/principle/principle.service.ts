@@ -18,11 +18,10 @@ export class PrincipleService {
     createPrincipleDto: CreatePrincipleDto,
     user: UserEntity,
   ) {
-    const { content, date } = createPrincipleDto;
+    const { content } = createPrincipleDto;
 
     const newPrinciple = new PrincipleEntity({
       content,
-      date,
     });
 
     newPrinciple.user = user;
@@ -32,26 +31,18 @@ export class PrincipleService {
     return { message: 'create success' };
   }
 
-  async findAll(startDate: string, endDate: string, user: UserEntity) {
+  async findAll(user: UserEntity) {
     const principles = await this.principleRepository.find({
       where: {
-        date: Between(startDate, endDate),
         user,
       },
     });
 
-    return principles.reduce((acc, cur) => {
-      if (acc[cur.date]) {
-        acc[cur.date].push(cur);
-      } else {
-        acc[cur.date] = [cur];
-      }
-      return acc;
-    }, {});
-  }
-
-  findOne(id: number) {
-    return this.principleRepository.find({ where: { id } });
+    return principles.map((principle) => {
+      delete principle.createdAt;
+      delete principle.updatedAt;
+      return principle;
+    });
   }
 
   update(id: number, updatePrincipleDto: UpdatePrincipleDto) {
