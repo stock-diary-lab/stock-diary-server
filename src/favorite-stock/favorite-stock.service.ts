@@ -5,61 +5,70 @@ import { UpdateFavoriteStockDto } from './dto/update-favorite-stock.dto';
 import { FavoriteStockRepository } from './favorite-stocks.repository';
 import { UserEntity } from 'src/auth/user.entity';
 import { FavoriteStockEntity } from './favorite-stock.entity';
-import { Between } from 'typeorm';
+import { ListedStockRepository } from 'src/listed-stock/listed-stock.repository';
 
 @Injectable()
 export class FavoriteStockService {
   constructor(
     @InjectRepository(FavoriteStockRepository)
+    @InjectRepository(ListedStockRepository)
     private favoriteStockRepository: FavoriteStockRepository,
+    private listedStockRepository: ListedStockRepository,
   ) {}
 
   async createFavoriteStock(
     createFavoriteStockDto: CreateFavoriteStockDto,
     user: UserEntity,
   ) {
-    const { isFavorite, date } = createFavoriteStockDto;
+    const { isFavorite, listedStockId } = createFavoriteStockDto;
+
+    const listedStock = await this.listedStockRepository.findOne({
+      id: listedStockId,
+    });
+
+    const found = await this.favoriteStockRepository.findOne({
+      listedStock,
+      user,
+    });
+
+    console.log(found);
+    if (found) {
+      throw new Error('이미 등록된 주식정보');
+    }
 
     const newFavoriteStock = new FavoriteStockEntity({
       isFavorite,
-      date,
     });
 
+    if (!listedStock) {
+      throw new Error('상장된 주식 정보가 존재하지 않음');
+    }
+
     newFavoriteStock.user = user;
+
+    newFavoriteStock.listedStock = listedStock;
 
     await this.favoriteStockRepository.save(newFavoriteStock);
 
     return { message: 'create success' };
   }
 
-  async findAll(startDate: string, endDate: string, user: UserEntity) {
+  async findAll(user: UserEntity) {
     const favoriteStocks = await this.favoriteStockRepository.find({
-      where: {
-        date: Between(startDate, endDate),
-        user,
-      },
+      where: { user },
+      relations: ['listedStock'],
     });
 
-    return favoriteStocks.reduce((acc, cur) => {
-      if (acc[cur.date]) {
-        acc[cur.date].push(cur);
-      } else {
-        acc[cur.date] = [cur];
-      }
-      return acc;
-    }, {});
+    return favoriteStocks;
   }
 
-  findOne(id: string) {
-    return this.favoriteStockRepository.find({ where: { id } });
+  async update(id: string, updateFavoriteStockDto: UpdateFavoriteStockDto) {
+    await this.favoriteStockRepository.update(id, updateFavoriteStockDto);
+    return { message: 'update success' };
   }
 
-  update(id: string, updateFavoriteStockDto: UpdateFavoriteStockDto) {
-    this.favoriteStockRepository.update(id, updateFavoriteStockDto);
-  }
-
-  deleteOne(id: string) {
-    this.favoriteStockRepository.delete({ id });
-    return 'delete success';
+  async deleteOne(id: string) {
+    await this.favoriteStockRepository.delete({ id });
+    return { message: 'delete success' };
   }
 }

@@ -9,23 +9,21 @@ import {
   UseGuards,
   ValidationPipe,
   Req,
-  Query,
 } from '@nestjs/common';
 import { FavoriteStockService } from './favorite-stock.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CreateFavoriteStockDto } from './dto/create-favorite-stock.dto';
 import { UpdateFavoriteStockDto } from './dto/update-favorite-stock.dto';
-import { ReadFavoriteStockDto } from './dto/read-favorite-stock-dto';
 
-@Controller('favoriteStock')
+@Controller('favorite-stock')
 @UseGuards(AuthGuard())
 @ApiBearerAuth('jwt')
 export class FavoriteStockController {
   constructor(private readonly favoriteStockService: FavoriteStockService) {}
 
   @ApiResponse({
-    status: 200,
+    status: 201,
   })
   @Post()
   async create(
@@ -40,25 +38,12 @@ export class FavoriteStockController {
 
   @ApiResponse({
     status: 200,
-    description: '일지 정보 리턴 api',
+    description: '선호종목 정보 리턴 api',
   })
   @ApiBearerAuth('jwt')
   @Get()
-  findAll(@Req() req, @Query() query: ReadFavoriteStockDto) {
-    return this.favoriteStockService.findAll(
-      query.startDate,
-      query.endDate,
-      req.user,
-    );
-  }
-
-  @ApiResponse({
-    status: 200,
-  })
-  @ApiBearerAuth('jwt')
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.favoriteStockService.findOne(id);
+  findAll(@Req() req) {
+    return this.favoriteStockService.findAll(req.user);
   }
 
   @ApiResponse({

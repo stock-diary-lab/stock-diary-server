@@ -20,10 +20,6 @@ export class PrincipleEntity implements IPrinciple {
   @Column({ charset: 'utf8' })
   content: string;
 
-  @ApiProperty({ description: '날짜' })
-  @Column({ type: 'date' })
-  date: string;
-
   @ApiProperty({ description: '생성시각' })
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -38,7 +34,6 @@ export class PrincipleEntity implements IPrinciple {
   constructor(partial: Partial<PrincipleEntity>) {
     if (partial) {
       this.content = partial.content;
-      this.date = partial.date;
     }
   }
 }
