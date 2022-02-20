@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BoughtStockEntity } from 'src/bought-stock/entities/bought-stock.entity';
+import { FavoriteStockEntity } from 'src/favorite-stock/favorite-stock.entity';
 import { StockTransactionEntity } from 'src/stock-transaction/stock-transaction.entity';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { IListedStock, MarketType } from '../listed-stock.interface';
@@ -34,6 +35,12 @@ export class ListedStockEntity implements IListedStock {
 
   @OneToMany(() => BoughtStockEntity, (boughtStock) => boughtStock.listedStock)
   boughtStocks: BoughtStockEntity[];
+
+  @OneToMany(
+    () => FavoriteStockEntity,
+    (favoriteStock) => favoriteStock.listedStock,
+  )
+  favoriteStocks: FavoriteStockEntity[];
 
   constructor(partial: Partial<ListedStockEntity>) {
     if (partial) {

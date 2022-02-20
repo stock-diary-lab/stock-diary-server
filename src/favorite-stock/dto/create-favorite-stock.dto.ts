@@ -6,7 +6,7 @@ export class CreateFavoriteStockDto {
   @IsNotEmpty()
   readonly isFavorite: boolean;
 
-  @ApiProperty({ description: '날짜' })
+  @ApiProperty({ description: '상장된 주식종목코드' })
   @IsNotEmpty()
-  date: string;
+  listedStockId: string;
 }
