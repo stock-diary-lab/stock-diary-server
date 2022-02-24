@@ -9,4 +9,6 @@ export interface IListedStock {
   largeSector?: string;
   mediumSector?: string;
   market: MarketType;
+  flucRate?: string;
+  point?: string;
 }

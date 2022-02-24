@@ -27,6 +27,14 @@ export class ListedStockEntity implements IListedStock {
   @Column({ type: 'enum', enum: MarketType })
   market: MarketType;
 
+  @ApiProperty({ description: '등락률' })
+  @Column({ nullable: true, charset: 'utf8' })
+  flucRate: string;
+
+  @ApiProperty({ description: '수치' })
+  @Column({ nullable: true, charset: 'utf8' })
+  point: string;
+
   @OneToMany(
     () => StockTransactionEntity,
     (stockTransaction) => stockTransaction.listedStock,
@@ -49,6 +57,8 @@ export class ListedStockEntity implements IListedStock {
       this.largeSector = partial.largeSector || null;
       this.mediumSector = partial.mediumSector || null;
       this.market = partial.market;
+      this.flucRate = partial.flucRate || null;
+      this.point = partial.point || null;
     }
   }
 }
