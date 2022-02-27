@@ -18,7 +18,9 @@ export class BoughtStockEntity implements IBoughtStock {
   @Column()
   amount: number;
 
-  @ManyToOne(() => UserEntity, (user) => user.boughtStocks)
+  @ManyToOne(() => UserEntity, (user) => user.boughtStocks, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
   @ManyToOne(() => ListedStockEntity, (listedStock) => listedStock.boughtStocks)

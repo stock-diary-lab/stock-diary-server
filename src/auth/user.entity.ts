@@ -12,6 +12,7 @@ import { StockTransactionEntity } from 'src/stock-transaction/stock-transaction.
 import { DiaryEntity } from 'src/diary/diary.entity';
 import { FavoriteStockEntity } from 'src/favorite-stock/favorite-stock.entity';
 import { BoughtStockEntity } from 'src/bought-stock/entities/bought-stock.entity';
+import { PrincipleEntity } from 'src/principle/principle.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity implements IUser {
@@ -53,6 +54,9 @@ export class UserEntity implements IUser {
 
   @OneToMany(() => BoughtStockEntity, (boughtStock) => boughtStock.user)
   boughtStocks: BoughtStockEntity[];
+
+  @OneToMany(() => PrincipleEntity, (principle) => principle.user)
+  principles: PrincipleEntity[];
 
   constructor(partial: Partial<UserEntity>) {
     if (partial) {

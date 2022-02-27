@@ -28,7 +28,9 @@ export class PrincipleEntity implements IPrinciple {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.diaries)
+  @ManyToOne(() => UserEntity, (user) => user.principles, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
   constructor(partial: Partial<PrincipleEntity>) {

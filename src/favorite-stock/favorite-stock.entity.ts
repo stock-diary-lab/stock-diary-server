@@ -29,7 +29,9 @@ export class FavoriteStockEntity implements IFavoriteStock {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.favoriteStocks)
+  @ManyToOne(() => UserEntity, (user) => user.favoriteStocks, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
   @ManyToOne(
