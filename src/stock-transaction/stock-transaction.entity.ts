@@ -57,7 +57,9 @@ export class StockTransactionEntity implements IStockTransaction {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.stockTransactions)
+  @ManyToOne(() => UserEntity, (user) => user.stockTransactions, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
   @ManyToOne(

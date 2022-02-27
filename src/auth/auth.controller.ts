@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Redirect,
@@ -50,5 +51,12 @@ export class AuthController {
     return {
       userName: req.user.nickname,
     };
+  }
+
+  @ApiBearerAuth('jwt')
+  @Delete('user')
+  @UseGuards(AuthGuard())
+  deleteUser(@Req() req) {
+    return this.authService.deleteUser(req.user);
   }
 }

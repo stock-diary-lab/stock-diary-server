@@ -32,7 +32,9 @@ export class DiaryEntity implements IDiary {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.diaries)
+  @ManyToOne(() => UserEntity, (user) => user.diaries, {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
 
   constructor(partial: Partial<DiaryEntity>) {
