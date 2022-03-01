@@ -20,14 +20,14 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(AuthGuard('google'))
-  @Redirect(`http://localhost:8080`, 302)
+  @Redirect(process.env.CLIENT_URL, 302)
   async googleAuthRedirect(@Req() req) {
     const { user } = await this.authService.googleLogin(req);
 
     const { accessToken } = await this.authService.createUserIfExist(user);
 
     return {
-      url: `http://localhost:8080?token=${accessToken}`,
+      url: `${process.env.CLIENT_URL}?token=${accessToken}`,
     };
   }
 
