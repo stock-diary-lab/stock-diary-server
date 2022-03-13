@@ -18,4 +18,16 @@ export class BoughtStockController {
     const topFiveItems = await this.boughtStockService.getTopFive(req.user);
     return topFiveItems;
   }
+
+  @ApiResponse({
+    status: 200,
+    description: '보유주식 인덱스 조회',
+  })
+  @Get('/indexes')
+  async getBoughtStockIndexes(@Req() req) {
+    const boughtStockIndexes =
+      await this.boughtStockService.getBoughtStockWithIndexes(req.user);
+
+    return boughtStockIndexes;
+  }
 }

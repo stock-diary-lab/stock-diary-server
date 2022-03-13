@@ -48,4 +48,17 @@ export class BoughtStockService {
 
     return { topFiveStocks, topFiveSectors };
   }
+
+  async getBoughtStockWithIndexes(user: UserEntity) {
+    const boughtStocks = await this.boughtStockRepository.find({
+      where: { user, quantity: MoreThan(0) },
+      relations: ['listedStock'],
+    });
+
+    return boughtStocks.map((boughtStock) => ({
+      name: boughtStock.listedStock.name,
+      point: boughtStock.listedStock.point,
+      flucRate: boughtStock.listedStock.flucRate,
+    }));
+  }
 }
