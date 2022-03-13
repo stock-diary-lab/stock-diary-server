@@ -31,7 +31,6 @@ export class FavoriteStockService {
       user,
     });
 
-    console.log(found);
     if (found) {
       throw new Error('이미 등록된 주식정보');
     }
@@ -70,5 +69,18 @@ export class FavoriteStockService {
   async deleteOne(id: string) {
     await this.favoriteStockRepository.delete({ id });
     return { message: 'delete success' };
+  }
+
+  async getFavoriteStocksWithIndexes(user: UserEntity) {
+    const favoriteStocks = await this.favoriteStockRepository.find({
+      where: { user },
+      relations: ['listedStock'],
+    });
+
+    return favoriteStocks.map((favoriteStock) => ({
+      name: favoriteStock.listedStock.name,
+      point: favoriteStock.listedStock.point,
+      flucRate: favoriteStock.listedStock.flucRate,
+    }));
   }
 }

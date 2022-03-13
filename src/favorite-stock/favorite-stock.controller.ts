@@ -64,4 +64,16 @@ export class FavoriteStockController {
   remove(@Param('id') id: string) {
     return this.favoriteStockService.deleteOne(id);
   }
+
+  @ApiResponse({
+    status: 200,
+    description: '최선호종목 인덱스 조회',
+  })
+  @Get('/indexes')
+  async getFavoriteStockIndexes(@Req() req) {
+    const favoriteStockIndexes =
+      await this.favoriteStockService.getFavoriteStocksWithIndexes(req.user);
+
+    return favoriteStockIndexes;
+  }
 }
