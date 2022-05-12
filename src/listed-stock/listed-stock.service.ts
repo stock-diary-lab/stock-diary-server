@@ -40,8 +40,12 @@ export class ListedStockService {
     if (name === '') return [];
 
     const listedStocks = await this.listedStockRepository.find({
-      name: Like(`%${name}%`),
+      name: Like(`${name}%`),
     });
-    return listedStocks;
+
+    return listedStocks.sort((a, b) => {
+      if (a.name < b.name) return -1;
+      else return 1;
+    });
   }
 }
