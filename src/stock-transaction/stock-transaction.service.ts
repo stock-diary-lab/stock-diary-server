@@ -155,7 +155,7 @@ export class StockTransactionService {
   }
 
   update(id: number, updateStockTransactionDto: UpdateStockTransactionDto) {
-    const { date, ...others } = updateStockTransactionDto;
+    const { date, listedStockId, ...others } = updateStockTransactionDto;
 
     this.stockTransactionRepository.update(id, { ...others });
   }
