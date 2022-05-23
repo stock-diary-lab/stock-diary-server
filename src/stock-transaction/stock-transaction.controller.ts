@@ -84,8 +84,13 @@ export class StockTransactionController {
   async update(
     @Param('id') id: number,
     @Body() updateStockTransactionDto: UpdateStockTransactionDto,
+    @Req() req,
   ) {
-    await this.stockTransactionService.update(id, updateStockTransactionDto);
+    await this.stockTransactionService.update(
+      id,
+      updateStockTransactionDto,
+      req.user,
+    );
     return { message: 'update success' };
   }
 
